@@ -65,8 +65,7 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    m_compressor.enableDigital();
-    m_compressor.close();
+    m_compressor.disable();
 
 
     m_drive.setDefaultCommand(
@@ -93,8 +92,8 @@ public class RobotContainer {
     new JoystickButton(m_rightJoystick, OIConstants.kstraightDrivePort).whenHeld(strightDriveCommand.beforeStarting( () -> m_driveStrightSetpoint = m_drive.getHeading(), m_drive));
 
       // Compressor
-    new JoystickButton(m_copilotDS, OIConstants.kCompressorSwitchPort).whenHeld( new RunCommand ( () -> {/*TODO: Disable compressor and smart dashboard info*/}));
-    new JoystickButton(m_copilotDS, OIConstants.kCompressorSwitchPort).whenReleased( new RunCommand ( () -> {/*TODO: Enable compressor and smart dashboard info*/}));
+    new JoystickButton(m_copilotDS, OIConstants.kCompressorSwitchPort).whenHeld( new RunCommand ( () -> {m_compressor.disable(); SmartDashboard.putBoolean("Compressor status", m_compressor.getPressureSwitchValue());}));
+    new JoystickButton(m_copilotDS, OIConstants.kCompressorSwitchPort).whenReleased( new RunCommand ( () -> {m_compressor.enableDigital(); SmartDashboard.putBoolean("Compressor status", m_compressor.getPressureSwitchValue());}));
     
   }
 
