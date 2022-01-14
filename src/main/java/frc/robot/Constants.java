@@ -47,6 +47,9 @@ public final class Constants {
         public static final int kstraightDrivePort = 2;
         public static final int kshootPort = 1;
 
+        //left joystick inputs
+        public static final int kMechDrivePort = 2;
+
         //copilot inputs
         public static final int kVisionSwitchPort = 1;//old climber switch
         public static final int kCompressorSwitchPort = 2;//old Compressor switch
