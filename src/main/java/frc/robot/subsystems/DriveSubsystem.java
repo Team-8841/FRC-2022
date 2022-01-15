@@ -19,12 +19,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
 public class DriveSubsystem extends SubsystemBase {
-  private final CANSparkMax m_leftFrontMotor = new CANSparkMax(DriveConstants.k_leftFrontMotorPort, MotorType.kBrushless);
-  private final CANSparkMax m_leftBackMotor = new CANSparkMax(DriveConstants.k_leftBackMotorPort, MotorType.kBrushless);
-  private final CANSparkMax m_rightFrontMotor = new CANSparkMax(DriveConstants.k_rightFrontMotorPort, MotorType.kBrushless);
-  private final CANSparkMax m_rightBackMotor = new CANSparkMax(DriveConstants.k_rightBackMotorPort, MotorType.kBrushless);
+  private final CANSparkMax m_leftFrontMotor = new CANSparkMax(DriveConstants.k_leftFrontMotorPort, MotorType.kBrushed);
+  private final CANSparkMax m_leftBackMotor = new CANSparkMax(DriveConstants.k_leftBackMotorPort, MotorType.kBrushed);
+  private final CANSparkMax m_rightFrontMotor = new CANSparkMax(DriveConstants.k_rightFrontMotorPort, MotorType.kBrushed);
+  private final CANSparkMax m_rightBackMotor = new CANSparkMax(DriveConstants.k_rightBackMotorPort, MotorType.kBrushed);
 
-  private final RelativeEncoder m_encoder;
+  //private final RelativeEncoder m_encoder;
 
   private AHRS m_gyro;
 
@@ -53,7 +53,7 @@ public class DriveSubsystem extends SubsystemBase {
     configureSpark(m_rightBackMotor);
     m_drive.setMaxOutput(0.7);
 
-    m_encoder = m_leftFrontMotor.getEncoder();
+    //m_encoder = m_leftFrontMotor.getEncoder();
 
     // Setup gyro
     try { 
@@ -80,16 +80,16 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
 
-  public void RobotDrive(double left, double right) {
+  /*public void RobotDrive(double left, double right) {
 
     switch (state) {
       case TANK_DRIVE:
+      case STRAIGHT_DRIVE:
         m_rightFrontMotor.setInverted(false);
         m_rightBackMotor.setInverted(false);
 
         m_drive.tankDrive(left, right);
-
-      case STRAIGHT_DRIVE:
+        break;
 
       case MECANUM_DRIVE:
 
@@ -97,6 +97,7 @@ public class DriveSubsystem extends SubsystemBase {
         m_rightBackMotor.setInverted(true);
 
         m_mecDrive.driveCartesian(left, right, 0);
+        break;
 
       case STRAIGHT_MECANUM:
 
@@ -104,13 +105,29 @@ public class DriveSubsystem extends SubsystemBase {
       m_rightBackMotor.setInverted(true);
 
       m_mecDrive.driveCartesian(left, right, 0);
+      break;
     }
 
 
+  }*/
+
+
+  public void robotDrive(double left, double right) {
+    if (state == DriveState.TANK_DRIVE) {
+        tankDrive(left, right);
+    } else if (state == DriveState.MECANUM_DRIVE) {
+      m_mecDrive.driveCartesian(left, right, 0);
+    }
   }
 
   public void arcadeDrive(double forward, double rotate) {
     m_drive.arcadeDrive(forward, rotate);
+  }
+
+  public void tankDrive(double left, double right) {
+    m_leftFrontMotor.setInverted(true);
+    m_leftBackMotor.setInverted(true);
+    m_drive.tankDrive(left, right);
   }
 
   public void setMaxOutput(double maxOutput) {
@@ -144,17 +161,17 @@ public class DriveSubsystem extends SubsystemBase {
     }
   }
 
-  public double getDistance() {
+  /*public double getDistance() {
     return m_encoder.getPosition();
   }
 
   public void resetEncoder() {
     m_encoder.setPosition(0);
-  }
+  }*/
 
   public void updateStatus() {
     SmartDashboard.putNumber("[DT] Heading", getHeading());
-    SmartDashboard.putNumber("[DT] Distance", getDistance());
+    //SmartDashboard.putNumber("[DT] Distance", getDistance());
   }
   
 }
