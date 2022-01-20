@@ -51,9 +51,6 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    m_compressor.disable();
-
-
     m_drive.setDefaultCommand(
       new RunCommand( () -> m_drive.robotDrive(-m_leftJoystick.getY(), -m_rightJoystick.getY()), m_drive)
       //new RunCommand( () -> m_drive.tankDrive(-m_leftJoystick.getY(), -m_rightJoystick.getY()), m_drive)
@@ -79,13 +76,11 @@ public class RobotContainer {
       new JoystickButton(m_rightJoystick, OIConstants.kMechDrivePort).whenHeld(new RunCommand ( () -> {m_drive.driveState(DriveState.MECANUM_DRIVE); SmartDashboard.putString("Drive State", "MECANUM_DRIVE");}));
       new JoystickButton(m_rightJoystick, OIConstants.kMechDrivePort).whenReleased( new RunCommand ( () -> {m_drive.driveState(DriveState.TANK_DRIVE); SmartDashboard.putString("Drive State", "TANK_DRIVE");}));
 
-      //new JoystickButton(m_rightJoystick, OIConstants.kstraightDrivePort).whenHeld(new RunCommand ( () -> {m_drive.driveState(DriveState.STRAIGHT_DRIVE); SmartDashboard.putString("Drive State", "STRAIGHT_DRIVE");}));
-      //new JoystickButton(m_rightJoystick, OIConstants.kstraightDrivePort).whenReleased( new RunCommand ( () -> {m_drive.driveState(DriveState.TANK_DRIVE); SmartDashboard.putString("Drive State", "TANK_DRIVE");}));
-
     // Compressor
-    new JoystickButton(m_copilotDS, OIConstants.kCompressorSwitchPort).whenHeld( new RunCommand ( () -> {m_compressor.disable(); SmartDashboard.putBoolean("Compressor status", m_compressor.getPressureSwitchValue());}));
+    // TODO: uncomment is using compressor
+    /*new JoystickButton(m_copilotDS, OIConstants.kCompressorSwitchPort).whenHeld( new RunCommand ( () -> {m_compressor.disable(); SmartDashboard.putBoolean("Compressor status", m_compressor.getPressureSwitchValue());}));
     new JoystickButton(m_copilotDS, OIConstants.kCompressorSwitchPort).whenReleased( new RunCommand ( () -> {m_compressor.enableDigital(); SmartDashboard.putBoolean("Compressor status", m_compressor.getPressureSwitchValue());}));
-    
+    */
   }
 
   /**

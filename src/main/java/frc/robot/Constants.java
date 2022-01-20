@@ -25,8 +25,8 @@ public final class Constants {
 
         public static final int kEncoderCPR = 42; //Neo encoder CPR
 
-        public static final double kWheelDiameterInches = 6.0; //TODO: get actual value
-        public static final double kWheelGearRatio = 1.0; //TODO: Get gear ratio
+        public static final double kWheelDiameterInches = 6.0; // Wheel diameter in inches
+        public static final double kWheelGearRatio = 8.0; // Drivetrain to wheel gear ratio
         public static final double kEncoderDistancePerPulse = 
             //Assumes the encoders are directly attached to the wheel shafts
             ((kWheelDiameterInches * Math.PI) / (double) kEncoderCPR) * kWheelGearRatio;
@@ -44,11 +44,9 @@ public final class Constants {
         public static final int kCopilotDsPort = 2;
 
         //right joystick inputs
-        public static final int kstraightDrivePort = 2;
+        public static final int kMechDrivePort = 2;
         public static final int kshootPort = 1;
 
-        //left joystick inputs
-        public static final int kMechDrivePort = 2;
 
         //copilot inputs
         public static final int kVisionSwitchPort = 1;//old climber switch

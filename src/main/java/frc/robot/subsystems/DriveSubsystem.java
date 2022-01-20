@@ -35,7 +35,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final MotorControllerGroup m_rightMotors = new MotorControllerGroup(m_rightFrontMotor, m_rightBackMotor);
 
   //The drivetain
-  public enum DriveState{TANK_DRIVE, STRAIGHT_DRIVE, MECANUM_DRIVE, STRAIGHT_MECANUM}
+  public enum DriveState{TANK_DRIVE, MECANUM_DRIVE}
   private DriveState state;
 
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
@@ -80,15 +80,14 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
 
-  /*public void RobotDrive(double left, double right) {
+  public void robotDrive(double left, double right) {
 
     switch (state) {
       case TANK_DRIVE:
-      case STRAIGHT_DRIVE:
         m_rightFrontMotor.setInverted(false);
         m_rightBackMotor.setInverted(false);
 
-        m_drive.tankDrive(left, right);
+        m_drive.tankDriveIK(left, right, false);
         break;
 
       case MECANUM_DRIVE:
@@ -96,38 +95,15 @@ public class DriveSubsystem extends SubsystemBase {
         m_rightFrontMotor.setInverted(true);
         m_rightBackMotor.setInverted(true);
 
-        m_mecDrive.driveCartesian(left, right, 0);
+        m_mecDrive.driveCartesianIK(left, right, 0, getHeading());
         break;
-
-      case STRAIGHT_MECANUM:
-
-      m_rightFrontMotor.setInverted(true);
-      m_rightBackMotor.setInverted(true);
-
-      m_mecDrive.driveCartesian(left, right, 0);
-      break;
     }
 
 
-  }*/
-
-
-  public void robotDrive(double left, double right) {
-    if (state == DriveState.TANK_DRIVE) {
-        tankDrive(left, right);
-    } else if (state == DriveState.MECANUM_DRIVE) {
-      m_mecDrive.driveCartesian(left, right, 0);
-    }
   }
 
   public void arcadeDrive(double forward, double rotate) {
     m_drive.arcadeDrive(forward, rotate);
-  }
-
-  public void tankDrive(double left, double right) {
-    m_leftFrontMotor.setInverted(true);
-    m_leftBackMotor.setInverted(true);
-    m_drive.tankDrive(left, right);
   }
 
   public void setMaxOutput(double maxOutput) {
