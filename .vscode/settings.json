@@ -1,6 +1,15 @@
 {
+  "editor.suggestSelection": "first",
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
   "java.configuration.updateBuildConfiguration": "automatic",
   "java.server.launchMode": "Standard",
+  "java.test.defaultConfig": "WPIlibUnitTests",
+  "java.saveActions.organizeImports": true,
+  "java.dependency.packagePresentation": "hierarchical",
+  "java.maven.downloadSources": true,
+  "java.format.settings.url": "file:.vscode/eclipse-java-google-style.xml",
+  "maven.view": "hierarchical", 
+  "python.languageServer": "Default",
   "files.exclude": {
     "**/.git": true,
     "**/.svn": true,
@@ -14,6 +23,9 @@
     "**/.factorypath": true,
     "**/*~": true
   },
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+},  
   "java.test.config": [
     {
       "name": "WPIlibUnitTests",
@@ -24,6 +36,5 @@
         "DYLD_LIBRARY_PATH": "${workspaceFolder}/build/jni/release"
       }
     },
-  ],
-  "java.test.defaultConfig": "WPIlibUnitTests"
+  ]
 }
