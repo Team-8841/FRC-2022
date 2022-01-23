@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
 import frc.robot.Constants.OIConstants;
 // Automodes
 import frc.robot.commands.AutoTemplate1;
@@ -51,9 +50,11 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
+    m_compressor.disable();
+
+
     m_drive.setDefaultCommand(
-      new RunCommand( () -> m_drive.robotDrive(-m_leftJoystick.getY(), -m_rightJoystick.getY()), m_drive)
-      //new RunCommand( () -> m_drive.tankDrive(-m_leftJoystick.getY(), -m_rightJoystick.getY()), m_drive)
+      new RunCommand( () -> m_drive.RobotDrive(-m_leftJoystick.getY(), -m_rightJoystick.getY()), m_drive)
     );
 
     m_chooser.setDefaultOption("Default Auto", new AutoTemplate1(m_drive));
@@ -73,14 +74,13 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Drive state changers
-      new JoystickButton(m_rightJoystick, OIConstants.kMechDrivePort).whenHeld(new RunCommand ( () -> {m_drive.driveState(DriveState.MECANUM_DRIVE); SmartDashboard.putString("Drive State", "MECANUM_DRIVE");}));
-      new JoystickButton(m_rightJoystick, OIConstants.kMechDrivePort).whenReleased( new RunCommand ( () -> {m_drive.driveState(DriveState.TANK_DRIVE); SmartDashboard.putString("Drive State", "TANK_DRIVE");}));
+      new JoystickButton(m_leftJoystick, OIConstants.kMechDrivePort).whenHeld(new RunCommand ( () -> {m_drive.driveState(DriveState.MECANUM_DRIVE); SmartDashboard.putString("[DT]Drive State", "MECANUM_DRIVE");}));
+      new JoystickButton(m_leftJoystick, OIConstants.kMechDrivePort).whenReleased( new RunCommand ( () -> {m_drive.driveState(DriveState.TANK_DRIVE); SmartDashboard.putString("[DT]Drive State", "TANK_DRIVE");}));
 
     // Compressor
-    // TODO: uncomment is using compressor
-    /*new JoystickButton(m_copilotDS, OIConstants.kCompressorSwitchPort).whenHeld( new RunCommand ( () -> {m_compressor.disable(); SmartDashboard.putBoolean("Compressor status", m_compressor.getPressureSwitchValue());}));
-    new JoystickButton(m_copilotDS, OIConstants.kCompressorSwitchPort).whenReleased( new RunCommand ( () -> {m_compressor.enableDigital(); SmartDashboard.putBoolean("Compressor status", m_compressor.getPressureSwitchValue());}));
-    */
+    new JoystickButton(m_copilotDS, OIConstants.kCompressorSwitchPort).whenHeld( new RunCommand ( () -> {m_compressor.disable(); SmartDashboard.putBoolean("[PN]Compressor status", m_compressor.getPressureSwitchValue());}));
+    new JoystickButton(m_copilotDS, OIConstants.kCompressorSwitchPort).whenReleased( new RunCommand ( () -> {m_compressor.enableDigital(); SmartDashboard.putBoolean("[PN]Compressor status", m_compressor.getPressureSwitchValue());}));
+    
   }
 
   /**

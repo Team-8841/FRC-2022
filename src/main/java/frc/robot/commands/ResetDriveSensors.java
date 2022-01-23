@@ -14,7 +14,7 @@ public class ResetDriveSensors extends InstantCommand {
 
     @Override
     public void initialize() {
-        //m_drive.resetEncoder();
+        m_drive.resetEncoder();
         m_drive.resetHeading();
     }
 

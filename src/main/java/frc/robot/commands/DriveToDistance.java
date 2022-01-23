@@ -20,13 +20,13 @@ public class DriveToDistance extends CommandBase {
     
     @Override
     public void initialize() {
-        //m_drive.resetEncoder();
+        m_drive.resetEncoder();
         rotationPID.setSetpoint(m_drive.getHeading());
     }
 
     @Override
     public void execute() {
-        double speed = distancePID.calculate(/*m_drive.getDistance()*/0.0);
+        double speed = distancePID.calculate(m_drive.getDistance());
         double maxSpeed = .55; //TODO: Tune
 
         if (speed > maxSpeed) 
