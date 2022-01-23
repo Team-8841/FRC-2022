@@ -41,7 +41,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   // The drivetain
   public enum DriveState {
-    TANK_DRIVE, MECANUM_DRIVE
+    TANK_DRIVE, STRAIGHT_DRIVE, MECANUM_DRIVE, STRAIGHT_MECANUM
   }
 
   private DriveState state;
@@ -78,7 +78,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   private void configureSpark(CANSparkMax sparkMax) {
     sparkMax.restoreFactoryDefaults();
-    sparkMax.setOpenLoopRampRate(DriveConstants.kDTRampRate);
+    sparkMax.setOpenLoopRampRate(0.5);// TODO: tune to slow acceleration (higher = slower)
     sparkMax.setSmartCurrentLimit(DriveConstants.kCurrentLimit);
     sparkMax.setIdleMode(CANSparkMax.IdleMode.kCoast);
   }
@@ -90,12 +90,11 @@ public class DriveSubsystem extends SubsystemBase {
 
 
   public void RobotDrive(double left, double right) {
-    
     m_drive.feed();
-    m_mecDrive.feed();
 
     switch (state) {
       case TANK_DRIVE:
+      case STRAIGHT_DRIVE:
         m_rightFrontMotor.setInverted(false);
         m_rightBackMotor.setInverted(false);
 
@@ -103,6 +102,14 @@ public class DriveSubsystem extends SubsystemBase {
         break;
 
       case MECANUM_DRIVE:
+
+        m_rightFrontMotor.setInverted(true);
+        m_rightBackMotor.setInverted(true);
+
+        m_mecDrive.driveCartesian(left, right, 0);
+        break;
+
+      case STRAIGHT_MECANUM:
 
         m_rightFrontMotor.setInverted(true);
         m_rightBackMotor.setInverted(true);
