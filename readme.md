@@ -14,3 +14,8 @@ https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-2/wpilib-setup.html
 # How to Build Code
 Use the ctrl + shift + p keys to open the command pallet
 WPILib: Build Robot Code
+
+# Examples of OpenCV
+1. https://www.bluetin.io/opencv/object-detection-tracking-opencv-python/
+2. https://www.pyimagesearch.com/2015/09/14/ball-tracking-with-opencv/
+3. https://dbloisi.github.io/tutorial/balldetection.html
