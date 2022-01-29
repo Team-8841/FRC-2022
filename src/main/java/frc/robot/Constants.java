@@ -95,7 +95,4 @@ public final class Constants {
         public static final int kTurretJoystickXPort    = 4;
         public static final int kClimberJoystickYPort   = 2;
     }
-
-
-
 }
