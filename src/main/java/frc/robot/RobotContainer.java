@@ -26,11 +26,13 @@ import frc.robot.commands.AutoTemplate5;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.DriveSubsystem.DriveState;
 
-
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
@@ -45,13 +47,14 @@ public class RobotContainer {
   private final Joystick m_rightJoystick = new Joystick(OIConstants.kRightjoystickPort);
   private final Joystick m_copilotDS = new Joystick(OIConstants.kCopilotDsPort);
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
 
     m_compressor.disable();
-
 
     m_drive.setDefaultCommand(new RunCommand(
         () -> m_drive.RobotDrive(-m_leftJoystick.getY(), -m_rightJoystick.getY()), m_drive));
@@ -66,9 +69,11 @@ public class RobotContainer {
   }
 
   /**
-   * Use this method to define your button->command mappings. Buttons can be created by
+   * Use this method to define your button->command mappings. Buttons can be
+   * created by
    * instantiating a {@link GenericHID} or one of its subclasses
-   * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a
+   * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
+   * passing it to a
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
@@ -83,12 +88,12 @@ public class RobotContainer {
           SmartDashboard.putString("Drive State", "TANK_DRIVE");
         }));
 
-    new JoystickButton(m_rightJoystick, OIConstants.kstraightDrivePort)
+    new JoystickButton(m_rightJoystick, OIConstants.kMechDrivePort)
         .whenHeld(new RunCommand(() -> {
           m_drive.driveState(DriveState.STRAIGHT_DRIVE);
           SmartDashboard.putString("Drive State", "STRAIGHT_DRIVE");
         }));
-    new JoystickButton(m_rightJoystick, OIConstants.kstraightDrivePort)
+    new JoystickButton(m_rightJoystick, OIConstants.kMechDrivePort)
         .whenReleased(new RunCommand(() -> {
           m_drive.driveState(DriveState.TANK_DRIVE);
           SmartDashboard.putString("Drive State", "TANK_DRIVE");
