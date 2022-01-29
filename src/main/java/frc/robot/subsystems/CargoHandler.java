@@ -5,19 +5,19 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.IntakeConstants;
 
 public class CargoHandler extends SubsystemBase {
-    VictorSPX intakeMotor = null;
-    VictorSPX feederStageOne = null;
-    VictorSPX feederStageTwo = null;
-
-    DigitalInput sensorStageOne = null;
-    DigitalInput sensorStageTwo = null;
-
-    boolean ballInFeederMiddle = false;
-    double shootingStarted = 0;
-    boolean shooting = false;
+    private final VictorSPX intakeMotor = new VictorSPX(IntakeConstants.intakeMotorPort);
+    private final VictorSPX feederStageOne = new VictorSPX(IntakeConstants.feederMotorPortOne);
+    private final VictorSPX feederStageTwo = new VictorSPX(IntakeConstants.feederMotorPortTwo);
+    private final DigitalInput sensorStageOne =
+            new DigitalInput(IntakeConstants.feederSensorStageOne);;
+    private final DigitalInput sensorStageTwo =
+            new DigitalInput(IntakeConstants.feederSensorStageTwo);;
+    private boolean ballInFeederMiddle = false;
+    private double shootingStarted = 0;
+    private boolean shooting = false;
     // Create motor controller instances
     // Create a solenoid instance
     // Create digital input instances
@@ -38,12 +38,6 @@ public class CargoHandler extends SubsystemBase {
     }
 
     public CargoHandler() {
-        // Set motor controller neutral mode
-        intakeMotor = new VictorSPX(Constants.IntakeConstants.intakeMotorPort);
-        feederStageOne = new VictorSPX(Constants.IntakeConstants.feederMotorPortOne);
-        feederStageTwo = new VictorSPX(Constants.IntakeConstants.feederMotorPortTwo);
-        sensorStageOne = new DigitalInput(Constants.IntakeConstants.feederSensorStageOne);
-        sensorStageTwo = new DigitalInput(Constants.IntakeConstants.feederSensorStageTwo);
         setMotorSpeed(feederStageTwo, false);
     }
 
@@ -54,7 +48,7 @@ public class CargoHandler extends SubsystemBase {
             setMotorState();
         } else {
             if (System.currentTimeMillis()
-                    - shootingStarted >= Constants.IntakeConstants.shootingDurationMilliseconds) {
+                    - shootingStarted >= IntakeConstants.shootingDurationMilliseconds) {
                 shooting = false;
             } else {
                 sendBallToShooter();
