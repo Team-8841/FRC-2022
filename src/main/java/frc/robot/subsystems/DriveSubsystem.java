@@ -40,8 +40,9 @@ public class DriveSubsystem extends SubsystemBase {
 
   // The drivetain
   public enum DriveState {
-    TANK_DRIVE, MECANUM_DRIVE
+    TANK_DRIVE, STRAIGHT_DRIVE, MECANUM_DRIVE, STRAIGHT_MECANUM
   }
+
 
   private DriveState state;
 

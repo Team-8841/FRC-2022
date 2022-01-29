@@ -18,6 +18,7 @@ import frc.robot.commands.AutoTemplate2;
 import frc.robot.commands.AutoTemplate3;
 import frc.robot.commands.AutoTemplate4;
 import frc.robot.commands.AutoTemplate5;
+import frc.robot.subsystems.CargoHandler;
 // Drive subsystem
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.DriveSubsystem.DriveState;
