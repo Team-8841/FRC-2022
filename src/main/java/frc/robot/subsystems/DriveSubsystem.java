@@ -18,13 +18,13 @@ import frc.robot.Constants.DriveConstants;
 
 public class DriveSubsystem extends SubsystemBase {
   private final CANSparkMax m_leftFrontMotor =
-      new CANSparkMax(DriveConstants.k_leftFrontMotorPort, MotorType.kBrushed);
+      new CANSparkMax(DriveConstants.k_leftFrontMotorPort, MotorType.kBrushless);
   private final CANSparkMax m_leftBackMotor =
-      new CANSparkMax(DriveConstants.k_leftBackMotorPort, MotorType.kBrushed);
+      new CANSparkMax(DriveConstants.k_leftBackMotorPort, MotorType.kBrushless);
   private final CANSparkMax m_rightFrontMotor =
-      new CANSparkMax(DriveConstants.k_rightFrontMotorPort, MotorType.kBrushed);
+      new CANSparkMax(DriveConstants.k_rightFrontMotorPort, MotorType.kBrushless);
   private final CANSparkMax m_rightBackMotor =
-      new CANSparkMax(DriveConstants.k_rightBackMotorPort, MotorType.kBrushed);
+      new CANSparkMax(DriveConstants.k_rightBackMotorPort, MotorType.kBrushless);
 
   // private final RelativeEncoder m_encoder;
 
@@ -104,7 +104,7 @@ public class DriveSubsystem extends SubsystemBase {
         m_rightFrontMotor.setInverted(true);
         m_rightBackMotor.setInverted(true);
 
-        m_mecDrive.driveCartesian(left, right, 0);
+        m_mecDrive.driveCartesian(left, right, 0, m_gyro.getAngle());
         break;
     }
   }

@@ -57,6 +57,7 @@ public final class Constants {
 
         public static final class ShooterConstants {
                 public static final int kShooterMotorPort = 5; // Spark max (can bus)
+                public static final int kShooterSlavePort = 6; // Spark max (can bus)
 
                 public static final int kHoodServo1Port = 1; // Hood servo 1
                 public static final int kHoodServo2Port = 2; // Hood servo 2
@@ -69,12 +70,12 @@ public final class Constants {
                 public static final double kD = 0;
                 public static final double kIZone = 0; // 330;
                 public static final double kFF = 1; // 0.000165;
-                public static final double kMaxOutput = 1;
+                public static final double kMaxOutput = 0.5;
                 public static final double kMinOutput = 0;
                 public static final double kAllowedError = 200;
 
-                public static final double kShooterSpeed1 = 5000;
-                public static final double kShooterSpeed2 = 5000;
+                public static final double kShooterSpeed1 = 1000;
+                public static final double kShooterSpeed2 = 2500;
                 public static final double kShooterSpeed3 = 5000;
 
                 public static final double kShooterHoodAngle1 = 0;// TODO: Tune

@@ -12,9 +12,9 @@ public class CargoHandler extends SubsystemBase {
     private final VictorSPX feederStageOne = new VictorSPX(IntakeConstants.feederMotorPortOne);
     private final VictorSPX feederStageTwo = new VictorSPX(IntakeConstants.feederMotorPortTwo);
     private final DigitalInput sensorStageOne =
-            new DigitalInput(IntakeConstants.feederSensorStageOne);;
+            new DigitalInput(IntakeConstants.feederSensorStageOne);
     private final DigitalInput sensorStageTwo =
-            new DigitalInput(IntakeConstants.feederSensorStageTwo);;
+            new DigitalInput(IntakeConstants.feederSensorStageTwo);
     private boolean ballInFeederMiddle = false;
     private double shootingStarted = 0;
     private boolean shooting = false;
