@@ -8,6 +8,7 @@ import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -18,39 +19,35 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
 public class DriveSubsystem extends SubsystemBase {
-  private final CANSparkMax m_leftFrontMotor =
-      new CANSparkMax(DriveConstants.k_leftFrontMotorPort, MotorType.kBrushless);
-  private final CANSparkMax m_leftBackMotor =
-      new CANSparkMax(DriveConstants.k_leftBackMotorPort, MotorType.kBrushless);
-  private final CANSparkMax m_rightFrontMotor =
-      new CANSparkMax(DriveConstants.k_rightFrontMotorPort, MotorType.kBrushless);
-  private final CANSparkMax m_rightBackMotor =
-      new CANSparkMax(DriveConstants.k_rightBackMotorPort, MotorType.kBrushless);
+  private final CANSparkMax m_leftFrontMotor = new CANSparkMax(DriveConstants.k_leftFrontMotorPort,
+      MotorType.kBrushless);
+  private final CANSparkMax m_leftBackMotor = new CANSparkMax(DriveConstants.k_leftBackMotorPort, MotorType.kBrushless);
+  private final CANSparkMax m_rightFrontMotor = new CANSparkMax(DriveConstants.k_rightFrontMotorPort,
+      MotorType.kBrushless);
+  private final CANSparkMax m_rightBackMotor = new CANSparkMax(DriveConstants.k_rightBackMotorPort,
+      MotorType.kBrushless);
 
   private final RelativeEncoder m_encoder;
 
   private AHRS m_gyro;
 
   // Left side drivetrain
-  private final MotorControllerGroup m_leftMotors =
-      new MotorControllerGroup(m_leftFrontMotor, m_leftBackMotor);
+  private final MotorControllerGroup m_leftMotors = new MotorControllerGroup(m_leftFrontMotor, m_leftBackMotor);
 
   // Right side drivetain
-  private final MotorControllerGroup m_rightMotors =
-      new MotorControllerGroup(m_rightFrontMotor, m_rightBackMotor);
+  private final MotorControllerGroup m_rightMotors = new MotorControllerGroup(m_rightFrontMotor, m_rightBackMotor);
 
   // The drivetain
   public enum DriveState {
-    TANK_DRIVE, STRAIGHT_DRIVE, MECANUM_DRIVE, STRAIGHT_MECANUM
+    TANK_DRIVE, MECANUM_DRIVE
   }
 
   private DriveState state;
 
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
 
-  private final MecanumDrive m_mecDrive =
-      new MecanumDrive(m_leftFrontMotor, m_leftBackMotor, m_rightFrontMotor, m_rightBackMotor);
-
+  private final MecanumDrive m_mecDrive = new MecanumDrive(m_leftFrontMotor, m_leftBackMotor, m_rightFrontMotor,
+      m_rightBackMotor);
 
   /** Creates a new ExampleSubsystem. */
   public DriveSubsystem() {
@@ -78,7 +75,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   private void configureSpark(CANSparkMax sparkMax) {
     sparkMax.restoreFactoryDefaults();
-    sparkMax.setOpenLoopRampRate(0.5);// TODO: tune to slow acceleration (higher = slower)
+    sparkMax.setOpenLoopRampRate(DriveConstants.kDTRampRate);
     sparkMax.setSmartCurrentLimit(DriveConstants.kCurrentLimit);
     sparkMax.setIdleMode(CANSparkMax.IdleMode.kCoast);
   }
@@ -88,13 +85,13 @@ public class DriveSubsystem extends SubsystemBase {
     updateStatus();
   }
 
-
   public void RobotDrive(double left, double right) {
+
     m_drive.feed();
+    m_mecDrive.feed();
 
     switch (state) {
       case TANK_DRIVE:
-      case STRAIGHT_DRIVE:
         m_rightFrontMotor.setInverted(false);
         m_rightBackMotor.setInverted(false);
 
@@ -108,16 +105,7 @@ public class DriveSubsystem extends SubsystemBase {
 
         m_mecDrive.driveCartesian(left, right, 0);
         break;
-
-      case STRAIGHT_MECANUM:
-
-        m_rightFrontMotor.setInverted(true);
-        m_rightBackMotor.setInverted(true);
-
-        m_mecDrive.driveCartesian(left, right, 0);
-        break;
     }
-
 
   }
 
