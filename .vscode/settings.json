@@ -8,6 +8,7 @@
   "java.dependency.packagePresentation": "hierarchical",
   "java.maven.downloadSources": true,
   "java.format.settings.url": "file:.vscode/eclipse-java-google-style.xml",
+  "editor.formatOnSave": true,
   "maven.view": "hierarchical", 
   "python.languageServer": "Default",
   "files.exclude": {
