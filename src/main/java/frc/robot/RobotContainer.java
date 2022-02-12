@@ -14,18 +14,14 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.Constants.TurretConstants;
 import frc.robot.commands.AutoTemplate1;
 import frc.robot.commands.AutoTemplate2;
 import frc.robot.commands.AutoTemplate3;
 import frc.robot.commands.AutoTemplate4;
 import frc.robot.commands.AutoTemplate5;
-import frc.robot.subsystems.CargoHandler;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.DriveSubsystem.DriveState;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Turret;
-import frc.robot.subsystems.Vision;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -37,9 +33,9 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem m_drive = new DriveSubsystem();
   private final Shooter m_shooter = new Shooter();
-  private final CargoHandler m_cargoHandler = new CargoHandler();
-  private final Vision m_vision = new Vision();
-  private final Turret m_turret = new Turret();
+  // private final CargoHandler m_cargoHandler = new CargoHandler();
+  // private final Vision m_vision = new Vision();
+  // private final Turret m_turret = new Turret();
   // private final Compressor m_compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
 
   // Chooser for auto commands
@@ -63,53 +59,40 @@ public class RobotContainer {
         -m_rightJoystick.getY(), m_rightJoystick.getX()), m_drive));
 
     // Default Vision command
-    m_vision.setDefaultCommand(new RunCommand(() -> {
-      m_vision.updateStatus();
-
-      if (m_copilotDS.getRawButton(OIConstants.kVisionSwitchPort)) {
-        // Vision mode
-        m_vision.setDriveMode(false);
-      } else {
-        m_vision.setDriveMode(true);
-      }
-    }, m_vision));
+    /*
+     * m_vision.setDefaultCommand(new RunCommand(() -> { m_vision.updateStatus();
+     * 
+     * if (m_copilotDS.getRawButton(OIConstants.kVisionSwitchPort)) { // Vision mode
+     * m_vision.setDriveMode(false); } else { m_vision.setDriveMode(true); } }, m_vision));
+     */
 
     // Default Shooter command
     m_shooter.setDefaultCommand(new RunCommand(() -> {
-      m_shooter.tune(); // TODO: comment this out after tuning shooter
+      // m_shooter.tune(); // TODO: comment this out after tuning shooter
       m_shooter.setSetpoint(getDesiredShooterSpeed());
       m_shooter.setHoodAngle(getDesiredShooterHoodAngle());
     }, m_shooter));
 
     // Default Turret command
-    m_turret.setDefaultCommand(new RunCommand(() -> {
-      if (m_copilotDS.getRawButton(OIConstants.kVisionSwitchPort)) {
-        // Auto targeting goodness
-        double headingError = m_vision.getTargetHorizontalOffset();
-        double turretSpeed = TurretConstants.kP * headingError;
-        double minSpeed = 0.09;
-        double threshold = 0.25;
-
-        if (Math.abs(turretSpeed) < minSpeed && Math.abs(headingError) > threshold) {
-          if (turretSpeed < 0) {
-            turretSpeed = -minSpeed;
-          } else {
-            turretSpeed = minSpeed;
-          }
-        }
-        m_turret.setSpeed(turretSpeed);
-      } else {
-        // Manual control
-        m_turret.setSpeed(getDesiredTurretSpeed());
-      }
-    }, m_turret));
+    /*
+     * m_turret.setDefaultCommand(new RunCommand(() -> { if
+     * (m_copilotDS.getRawButton(OIConstants.kVisionSwitchPort)) { // Auto targeting goodness double
+     * headingError = m_vision.getTargetHorizontalOffset(); double turretSpeed = TurretConstants.kP
+     * * headingError; double minSpeed = 0.09; double threshold = 0.25;
+     * 
+     * if (Math.abs(turretSpeed) < minSpeed && Math.abs(headingError) > threshold) { if (turretSpeed
+     * < 0) { turretSpeed = -minSpeed; } else { turretSpeed = minSpeed; } }
+     * m_turret.setSpeed(turretSpeed); } else { // Manual control
+     * m_turret.setSpeed(getDesiredTurretSpeed()); } }, m_turret));
+     */
 
     // Default CargoHandler command
-    m_cargoHandler.setDefaultCommand(new RunCommand(() -> {
-      m_cargoHandler.setIntakeSolenoid(m_copilotDS.getRawButton(OIConstants.kIntakeSolenoidPort));
-      m_cargoHandler.sensorControl(m_copilotDS.getRawButton(OIConstants.kIntakeInPort),
-          m_copilotDS.getRawButton(OIConstants.kIntakeOutPort));
-    }, m_cargoHandler));
+    /*
+     * m_cargoHandler.setDefaultCommand(new RunCommand(() -> {
+     * m_cargoHandler.setIntakeSolenoid(m_copilotDS.getRawButton(OIConstants.kIntakeSolenoidPort));
+     * m_cargoHandler.sensorControl(m_copilotDS.getRawButton(OIConstants.kIntakeInPort),
+     * m_copilotDS.getRawButton(OIConstants.kIntakeOutPort)); }, m_cargoHandler));
+     */
 
     // Auto mode selector
     m_chooser.setDefaultOption("Default Auto", new AutoTemplate1(m_drive));
@@ -139,23 +122,16 @@ public class RobotContainer {
           SmartDashboard.putString("[DT]Drive State", "TANK_DRIVE");
         }));
 
-    new JoystickButton(m_rightJoystick, OIConstants.kshootPort).whenHeld(new RunCommand(() -> {
-      if (m_copilotDS.getRawButton(OIConstants.kIntakeOutPort)) {
-        m_cargoHandler.setIntake(-.4);
-      } else if (m_copilotDS.getRawButton(OIConstants.kIntakeInPort)) {
-        m_cargoHandler.setIntake(.4);
-      } else {
-        m_cargoHandler.setIntake(0);
-      }
-
-      if (getDesiredShooterSpeed() > 100) {
-        m_cargoHandler.setQueue2(.6);
-        m_cargoHandler.setQueue1(.4);
-      } else {
-        m_cargoHandler.setQueue2(0);
-        m_cargoHandler.setQueue1(0);
-      }
-    }, m_cargoHandler));
+    /*
+     * new JoystickButton(m_rightJoystick, OIConstants.kshootPort).whenHeld(new RunCommand(() -> {
+     * if (m_copilotDS.getRawButton(OIConstants.kIntakeOutPort)) { m_cargoHandler.setIntake(-.4); }
+     * else if (m_copilotDS.getRawButton(OIConstants.kIntakeInPort)) { m_cargoHandler.setIntake(.4);
+     * } else { m_cargoHandler.setIntake(0); }
+     * 
+     * if (getDesiredShooterSpeed() > 100) { m_cargoHandler.setQueue2(.6);
+     * m_cargoHandler.setQueue1(.4); } else { m_cargoHandler.setQueue2(0);
+     * m_cargoHandler.setQueue1(0); } }, m_cargoHandler));
+     */
   }
 
   public double getDesiredTurretSpeed() {
@@ -209,12 +185,13 @@ public class RobotContainer {
     else if (knobValue >= 0.024 - threshold && knobValue < 0.024 + threshold) {
       speed = ShooterConstants.kShooterSpeed1;
     }
-    /*
-     * //If Shooter Knob is at 3 else if(knobValue >= 0.024 + threshold && knobValue < 0.055 +
-     * threshold){ speed = ShooterConstants.kShooterSpeed2; } //If Shooter Knob is at 4 else
-     * if(knobValue >= 0.055 + threshold){ speed = ShooterConstants.kShooterSpeed3; }
-     */
-    else {
+    // If Shooter Knob is at 3
+    else if (knobValue >= 0.024 + threshold && knobValue < 0.055 + threshold) {
+      speed = ShooterConstants.kShooterSpeed2;
+    } // If Shooter Knob is at 4
+    else if (knobValue >= 0.055 + threshold) {
+      speed = ShooterConstants.kShooterSpeed3;
+    } else {
       speed = 0;
     }
 

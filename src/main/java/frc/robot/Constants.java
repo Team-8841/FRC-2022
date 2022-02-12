@@ -55,12 +55,12 @@ public final class Constants {
                 public static final int kCurrentLimit = 80; // May need to tune
 
                 public static final int kEncoderCPR = 42; // NEO encoder 42 CPR
-                public static final double kP = 0; // 0.000230;
-                public static final double kI = 0; // 0.000001;
+                public static final double kP = 0.000230; // 0.000230;
+                public static final double kI = 0.000001; // 0.000001;
                 public static final double kD = 0;
-                public static final double kIZone = 0; // 330;
-                public static final double kFF = 1; // 0.000165;
-                public static final double kMaxOutput = 0.5;
+                public static final double kIZone = 330; // 330;
+                public static final double kFF = 0.000165; // 0.000165;
+                public static final double kMaxOutput = 1;
                 public static final double kMinOutput = 0;
                 public static final double kAllowedError = 200;
 
