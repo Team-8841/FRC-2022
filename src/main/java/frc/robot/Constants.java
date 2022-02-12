@@ -45,16 +45,6 @@ public final class Constants {
 
         }
 
-        // Create intake constants class
-        public static final class IntakeConstants {
-                public static final int feederMotorPortOne = 6;
-                public static final int feederMotorPortTwo = 7;
-                public static final int intakeMotorPort = 5;
-                public static final int feederSensorStageOne = 0;
-                public static final int feederSensorStageTwo = 1;
-                public static final int shootingDurationMilliseconds = 500;
-        }
-
         public static final class ShooterConstants {
                 public static final int kShooterMotorPort = 5; // Spark max (can bus)
                 public static final int kShooterSlavePort = 6; // Spark max (can bus)
@@ -83,6 +73,29 @@ public final class Constants {
                 public static final double kShooterHoodAngle3 = 0.68;// TODO: Tune
 
                 public static final double kDefaultHoodAngle = 0.6;// TODO: Tune
+        }
+
+        public static final class TurretConstants {
+                public static final int kTurretMotorPort = 7;
+
+                public static final int kLeftSensorPort = 2;
+                public static final int kRightSensorPort = 3;
+
+                public static final double kP = 0.085;// TODO: Tune
+        }
+
+
+        public static final class CargoHandlerConstants {
+                public static final int kIntakeMotorPort = 8;
+
+                public static final int kQueue1MotorPort = 9;
+                public static final int kQueue2MotorPort = 10;
+
+                public static final int kIntakeSolenoidPort = 1;
+
+                public static final int kQueue1SensorPort = 0;
+                public static final int kQueue2SensorPort = 1;
+
         }
 
         public static final class OIConstants {

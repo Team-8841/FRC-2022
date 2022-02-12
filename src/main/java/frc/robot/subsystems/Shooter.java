@@ -28,10 +28,12 @@ public class Shooter extends SubsystemBase {
         configureSpark(m_slave);
 
         m_shooter.setInverted(true);
-
         m_slave.setInverted(false);
 
         m_slave.follow(m_shooter, true);
+
+        m_hoodServo1.setBounds(2, 0, 0, 0, 1);
+        m_hoodServo2.setBounds(2, 0, 0, 0, 1);
 
         m_pidController = m_shooter.getPIDController();
         m_encoder = m_shooter.getEncoder();
