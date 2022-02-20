@@ -62,7 +62,7 @@ public final class Constants {
                 public static final double kFF = 0.000165; // 0.000165;
                 public static final double kMaxOutput = 1;
                 public static final double kMinOutput = 0;
-                public static final double kAllowedError = 200;
+                public static final double kAllowedError = 200; // TODO: Tune
 
                 public static final double kShooterSpeed1 = 1000;
                 public static final double kShooterSpeed2 = 2500;

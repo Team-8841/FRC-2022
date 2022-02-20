@@ -19,6 +19,7 @@ import frc.robot.commands.AutoTemplate2;
 import frc.robot.commands.AutoTemplate3;
 import frc.robot.commands.AutoTemplate4;
 import frc.robot.commands.AutoTemplate5;
+import frc.robot.subsystems.CargoHandler;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.DriveSubsystem.DriveState;
 import frc.robot.subsystems.Shooter;
@@ -36,6 +37,8 @@ public class RobotContainer {
   private final Shooter m_shooter = new Shooter();
   // private final CargoHandler m_cargoHandler = new CargoHandler();
   private final Vision m_vision = new Vision();
+  private final CargoHandler m_cargoHandler = new CargoHandler();
+  // private final Vision m_vision = new Vision();
   // private final Turret m_turret = new Turret();
   // private final Compressor m_compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
 
@@ -94,12 +97,13 @@ public class RobotContainer {
      */
 
     // Default CargoHandler command
-    /*
-     * m_cargoHandler.setDefaultCommand(new RunCommand(() -> {
-     * m_cargoHandler.setIntakeSolenoid(m_copilotDS.getRawButton(OIConstants.kIntakeSolenoidPort));
-     * m_cargoHandler.sensorControl(m_copilotDS.getRawButton(OIConstants.kIntakeInPort),
-     * m_copilotDS.getRawButton(OIConstants.kIntakeOutPort)); }, m_cargoHandler));
-     */
+
+    m_cargoHandler.setDefaultCommand(new RunCommand(() -> {
+      // m_cargoHandler.setIntakeSolenoid(m_copilotDS.getRawButton(OIConstants.kIntakeSolenoidPort));
+      m_cargoHandler.sensorControl(m_copilotDS.getRawButton(OIConstants.kIntakeInPort),
+          m_copilotDS.getRawButton(OIConstants.kIntakeOutPort));
+    }, m_cargoHandler));
+
 
     // Auto mode selector
     m_chooser.setDefaultOption("Default Auto", new AutoTemplate1(m_drive));
@@ -129,16 +133,29 @@ public class RobotContainer {
           SmartDashboard.putString("[DT]Drive State", "TANK_DRIVE");
         }));
 
-    /*
-     * new JoystickButton(m_rightJoystick, OIConstants.kshootPort).whenHeld(new RunCommand(() -> {
-     * if (m_copilotDS.getRawButton(OIConstants.kIntakeOutPort)) { m_cargoHandler.setIntake(-.4); }
-     * else if (m_copilotDS.getRawButton(OIConstants.kIntakeInPort)) { m_cargoHandler.setIntake(.4);
-     * } else { m_cargoHandler.setIntake(0); }
-     * 
-     * if (getDesiredShooterSpeed() > 100) { m_cargoHandler.setQueue2(.6);
-     * m_cargoHandler.setQueue1(.4); } else { m_cargoHandler.setQueue2(0);
-     * m_cargoHandler.setQueue1(0); } }, m_cargoHandler));
-     */
+
+    new JoystickButton(m_rightJoystick, OIConstants.kshootPort).whenHeld(new RunCommand(() -> {
+      if (m_copilotDS.getRawButton(OIConstants.kIntakeInPort)) {
+        m_cargoHandler.setQueue2(.4);
+      }
+
+      if (m_copilotDS.getRawButton(OIConstants.kIntakeOutPort)) {
+        m_cargoHandler.setIntake(-.4);
+      } else if (m_copilotDS.getRawButton(OIConstants.kIntakeInPort)) {
+        m_cargoHandler.setIntake(.4);
+      } else {
+        m_cargoHandler.setIntake(0);
+      }
+
+      if (getDesiredShooterSpeed() > 100) {
+        m_cargoHandler.setQueue2(.6);
+        m_cargoHandler.setQueue1(.4);
+      } else {
+        m_cargoHandler.setQueue2(0);
+        m_cargoHandler.setQueue1(0);
+      }
+    }, m_cargoHandler));
+
   }
 
   public double getDesiredTurretSpeed() {
