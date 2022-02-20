@@ -22,6 +22,7 @@ import frc.robot.commands.AutoTemplate5;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.DriveSubsystem.DriveState;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Vision;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -34,7 +35,7 @@ public class RobotContainer {
   private final DriveSubsystem m_drive = new DriveSubsystem();
   private final Shooter m_shooter = new Shooter();
   // private final CargoHandler m_cargoHandler = new CargoHandler();
-  // private final Vision m_vision = new Vision();
+  private final Vision m_vision = new Vision();
   // private final Turret m_turret = new Turret();
   // private final Compressor m_compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
 
@@ -59,12 +60,18 @@ public class RobotContainer {
         -m_rightJoystick.getY(), m_rightJoystick.getX()), m_drive));
 
     // Default Vision command
-    /*
-     * m_vision.setDefaultCommand(new RunCommand(() -> { m_vision.updateStatus();
-     * 
-     * if (m_copilotDS.getRawButton(OIConstants.kVisionSwitchPort)) { // Vision mode
-     * m_vision.setDriveMode(false); } else { m_vision.setDriveMode(true); } }, m_vision));
-     */
+
+    m_vision.setDefaultCommand(new RunCommand(() -> {
+      m_vision.updateStatus();
+
+      if (m_copilotDS.getRawButton(OIConstants.kVisionSwitchPort)) { // Vision mode
+        m_vision.setDriveMode(false);
+      } else {
+        m_vision.setDriveMode(true);
+      }
+    }, m_vision));
+
+
 
     // Default Shooter command
     m_shooter.setDefaultCommand(new RunCommand(() -> {
