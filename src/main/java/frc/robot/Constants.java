@@ -49,8 +49,8 @@ public final class Constants {
                 public static final int kShooterMotorPort = 5; // Spark max (can bus)
                 public static final int kShooterSlavePort = 6; // Spark max (can bus)
 
-                public static final int kHoodServo1Port = 1; // Hood servo 1
-                public static final int kHoodServo2Port = 2; // Hood servo 2
+                public static final int kHoodServo1Port = 0; // Hood servo 1 (PWM)
+                public static final int kHoodServo2Port = 1; // Hood servo 2 (PWM)
 
                 public static final int kCurrentLimit = 80; // May need to tune
 
