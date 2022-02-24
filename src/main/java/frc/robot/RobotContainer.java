@@ -162,7 +162,7 @@ public class RobotContainer {
 
   public double getDesiredShooterHoodAngle() {
     double angle;
-    double knobValue = m_copilotDS.getRawAxis(1);
+    double knobValue = m_copilotDS.getRawAxis(5);
     double threshold = 0.010;
 
     // If Shooter Knob is at 1
@@ -189,7 +189,7 @@ public class RobotContainer {
 
   public double getDesiredShooterSpeed() {
     double speed;
-    double knobValue = m_copilotDS.getRawAxis(1);
+    double knobValue = m_copilotDS.getRawAxis(4);
     double threshold = 0.010;
 
     // If Shooter Knob is at 1
@@ -201,11 +201,13 @@ public class RobotContainer {
       speed = ShooterConstants.kShooterSpeed1;
     }
     // If Shooter Knob is at 3
-    else if (knobValue >= 0.024 + threshold && knobValue < 0.055 + threshold) {
+    else if (knobValue >= 0.024 + threshold && knobValue < 0.035 + threshold) {
       speed = ShooterConstants.kShooterSpeed2;
     } // If Shooter Knob is at 4
-    else if (knobValue >= 0.055 + threshold) {
+    else if (knobValue >= 0.035 + threshold && knobValue < 0.055 + threshold) {
       speed = ShooterConstants.kShooterSpeed3;
+    } else if (knobValue >= 0.055 + threshold) {
+      speed = ShooterConstants.kShooterSpeed4;
     } else {
       speed = 0;
     }

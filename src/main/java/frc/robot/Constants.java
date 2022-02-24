@@ -66,7 +66,8 @@ public final class Constants {
 
                 public static final double kShooterSpeed1 = 1000;
                 public static final double kShooterSpeed2 = 2500;
-                public static final double kShooterSpeed3 = 5000;
+                public static final double kShooterSpeed3 = 3500;
+                public static final double kShooterSpeed4 = 4500;
 
                 public static final double kShooterHoodAngle1 = 0;// TODO: Tune
                 public static final double kShooterHoodAngle2 = 0.6;// TODO: Tune
@@ -93,8 +94,8 @@ public final class Constants {
 
                 public static final int kIntakeSolenoidPort = 1;
 
-                public static final int kQueue1SensorPort = 0;
-                public static final int kQueue2SensorPort = 1;
+                public static final int kQueue1SensorPort = 8;
+                public static final int kQueue2SensorPort = 9;
 
         }
 
@@ -112,14 +113,15 @@ public final class Constants {
                 // TODO: Figureout what switch is what
                 public static final int kVisionSwitchPort = 1;
                 public static final int kCompressorSwitchPort = 2;
+                public static final int kClimbModeSwitchPort = 3;
                 public static final int kIntakeInPort = 4;
                 public static final int kIntakeOutPort = 5;
                 public static final int kClimberSolenoidPort = 6;
                 public static final int kClimberSwitchPort = 9;
                 public static final int kIntakeSolenoidPort = 12;
 
-                public static final int kTurretJoystickXPort = 4;
-                public static final int kClimberJoystickYPort = 2;
+                public static final int kTurretJoystickXPort = 2;
+                public static final int kClimberJoystickYPort = 0;
         }
 
 }

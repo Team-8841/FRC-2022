@@ -57,7 +57,7 @@ public class CargoHandler extends SubsystemBase {
     }
 
     public boolean getQueue1Sensor() {
-        return !m_queueSensor1.get();
+        return m_queueSensor1.get();
     }
 
     public boolean getQueue2Sensor() {
@@ -72,29 +72,30 @@ public class CargoHandler extends SubsystemBase {
 
     public void sensorControl(boolean intakeIn, boolean intakeOut) {
         double intakeSpeed = .5;
-        double queueSpeed = .4;
+        double queue1Speed = .4;
+        double queue2Speed = .3;
 
         if (intakeOut) {
             setIntake(-intakeSpeed);
-            setQueue1(-intakeSpeed);
-            setQueue2(-queueSpeed);
+            setQueue1(-queue1Speed);
+            setQueue2(-queue2Speed);
         } else if (intakeIn) {
             // No cargo
             if (!getQueue1Sensor() & !getQueue2Sensor()) {
                 setIntake(intakeSpeed);
-                setQueue1(intakeSpeed);
-                setQueue2(queueSpeed);
+                setQueue1(queue1Speed);
+                setQueue2(queue2Speed);
             }
             // cargo in queue 1
             else if (getQueue1Sensor() & !getQueue2Sensor()) {
                 setIntake(intakeSpeed);
-                setQueue1(queueSpeed);
-                setQueue2(queueSpeed);
+                setQueue1(queue1Speed);
+                setQueue2(queue2Speed);
             }
             // cargo in queue 2
             else if (!getQueue1Sensor() & getQueue2Sensor()) {
                 setIntake(intakeSpeed);
-                setQueue1(intakeSpeed);
+                setQueue1(queue1Speed);
                 setQueue2(0);
             }
             // cargo in queue 1 and 2
