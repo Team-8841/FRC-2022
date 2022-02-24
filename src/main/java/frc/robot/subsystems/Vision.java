@@ -16,6 +16,7 @@ public class Vision extends SubsystemBase {
     private final NetworkTableEntry tx = limelightTable.getEntry("tx");
     private final NetworkTableEntry ty = limelightTable.getEntry("ty");
     private final NetworkTableEntry ta = limelightTable.getEntry("ta");
+    private final NetworkTableEntry tc = limelightTable.getEntry("tc");
 
     // sets
     private final NetworkTableEntry ledMode = limelightTable.getEntry("ledMode");
