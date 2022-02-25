@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.TurretConstants;
 import frc.robot.commands.AutoTemplate1;
 import frc.robot.commands.AutoTemplate2;
 import frc.robot.commands.AutoTemplate3;
@@ -23,6 +24,7 @@ import frc.robot.subsystems.CargoHandler;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.DriveSubsystem.DriveState;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.Vision;
 
 /**
@@ -35,11 +37,11 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem m_drive = new DriveSubsystem();
   private final Shooter m_shooter = new Shooter();
-  // private final CargoHandler m_cargoHandler = new CargoHandler();
-  private final Vision m_vision = new Vision();
   private final CargoHandler m_cargoHandler = new CargoHandler();
-  // private final Vision m_vision = new Vision();
-  // private final Turret m_turret = new Turret();
+  private final Vision m_vision = new Vision();
+  private final Turret m_turret = new Turret();
+  // private final Climber m_climber = new Climber();
+  // private final Lighting m_lighting = new Lighting();
   // private final Compressor m_compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
 
   // Chooser for auto commands
@@ -84,17 +86,30 @@ public class RobotContainer {
     }, m_shooter));
 
     // Default Turret command
-    /*
-     * m_turret.setDefaultCommand(new RunCommand(() -> { if
-     * (m_copilotDS.getRawButton(OIConstants.kVisionSwitchPort)) { // Auto targeting goodness double
-     * headingError = m_vision.getTargetHorizontalOffset(); double turretSpeed = TurretConstants.kP
-     * * headingError; double minSpeed = 0.09; double threshold = 0.25;
-     * 
-     * if (Math.abs(turretSpeed) < minSpeed && Math.abs(headingError) > threshold) { if (turretSpeed
-     * < 0) { turretSpeed = -minSpeed; } else { turretSpeed = minSpeed; } }
-     * m_turret.setSpeed(turretSpeed); } else { // Manual control
-     * m_turret.setSpeed(getDesiredTurretSpeed()); } }, m_turret));
-     */
+    m_turret.setDefaultCommand(new RunCommand(() -> {
+      if (m_copilotDS.getRawButton(OIConstants.kVisionSwitchPort)) {
+        // vision Control
+        double headingError = m_vision.getTargetHorizontalOffset();
+        double turretSpeed = TurretConstants.kP * headingError;
+        double minSpeed = 0.09;
+        double treshold = 0.25;
+
+        // if we are not within the treshold and the set speed is too low set it to min speed
+        if (Math.abs(turretSpeed) < minSpeed && Math.abs(headingError) > treshold) {
+          if (turretSpeed < 0) {
+            turretSpeed = -minSpeed;
+          } else {
+            turretSpeed = minSpeed;
+          }
+        }
+        m_turret.setSpeed(turretSpeed);
+      } else {
+        // Manual Control
+        m_turret.setSpeed(getDesiredTurretSpeed());
+      }
+
+    }, m_turret));
+
 
     // Default CargoHandler command
 

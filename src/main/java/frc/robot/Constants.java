@@ -99,6 +99,25 @@ public final class Constants {
 
         }
 
+        public static final class ClimberConstants {
+                public static final int kFrontLiftMotorPort = 11;
+                public static final int kRearLiftMotorPort = 12;
+                public static final int kRearPivotMotorPort = 13;
+
+                public static final int kFrontTopLimitSensorPort = 4;
+                public static final int kFrontBottomLimitSensorPort = 5;
+
+                public static final int kRearForwardLimitSensorPort = 6;
+                public static final int kRearBackLimitSensorPort = 7;
+                public static final int kRearTopLimitSensorPort = 8;
+                public static final int kRearBottomLimitSensorPort = 9;
+        }
+
+        public static final class MiscConstants {
+                public static final int kLEDPort = 3;
+                public static final int kLEDBufferLength = 60; // Default is 60 leds
+        }
+
         public static final class OIConstants {
 
                 public static final int kLeftjoystickPort = 0; // DS port 0
