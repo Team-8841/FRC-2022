@@ -49,8 +49,8 @@ public final class Constants {
                 public static final int kShooterMotorPort = 5; // Spark max (can bus)
                 public static final int kShooterSlavePort = 6; // Spark max (can bus)
 
-                public static final int kHoodServo1Port = 0; // Hood servo 1 (PWM)
-                public static final int kHoodServo2Port = 1; // Hood servo 2 (PWM)
+                public static final int kHoodServo1Port = 8; // Hood servo 1 (PWM)
+                public static final int kHoodServo2Port = 9; // Hood servo 2 (PWM)
 
                 public static final int kCurrentLimit = 80; // May need to tune
 
@@ -69,9 +69,9 @@ public final class Constants {
                 public static final double kShooterSpeed3 = 3500;
                 public static final double kShooterSpeed4 = 4500;
 
-                public static final double kShooterHoodAngle1 = 0;// TODO: Tune
-                public static final double kShooterHoodAngle2 = 0.6;// TODO: Tune
-                public static final double kShooterHoodAngle3 = 0.68;// TODO: Tune
+                public static final double kShooterHoodAngle1 = 0.3;// TODO: Tune
+                public static final double kShooterHoodAngle2 = 0.5;// TODO: Tune
+                public static final double kShooterHoodAngle3 = 0.75;// TODO: Tune
 
                 public static final double kDefaultHoodAngle = 0.6;// TODO: Tune
         }
@@ -94,8 +94,8 @@ public final class Constants {
 
                 public static final int kIntakeSolenoidPort = 1;
 
-                public static final int kQueue1SensorPort = 8;
-                public static final int kQueue2SensorPort = 9;
+                public static final int kQueue1SensorPort = 0;
+                public static final int kQueue2SensorPort = 1;
 
         }
 

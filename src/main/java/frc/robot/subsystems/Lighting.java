@@ -57,8 +57,9 @@ public class Lighting extends SubsystemBase {
 
         if (m_rState == RobotState.Idle) {
             rainbow();
+            m_led.setData(m_ledBuffer);
         }
-        m_led.setData(m_ledBuffer);
+
     }
 
     private void updateStatus() {

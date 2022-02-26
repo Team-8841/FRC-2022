@@ -21,10 +21,9 @@ import frc.robot.commands.AutoTemplate3;
 import frc.robot.commands.AutoTemplate4;
 import frc.robot.commands.AutoTemplate5;
 import frc.robot.subsystems.CargoHandler;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.DriveSubsystem.DriveState;
-import frc.robot.subsystems.Lighting;
-import frc.robot.subsystems.Lighting.RobotState;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.Vision;
@@ -42,8 +41,8 @@ public class RobotContainer {
   private final CargoHandler m_cargoHandler = new CargoHandler();
   private final Vision m_vision = new Vision();
   private final Turret m_turret = new Turret();
-  // private final Climber m_climber = new Climber();
-  private final Lighting m_lighting = new Lighting();
+  private final Climber m_climber = new Climber();
+  // private final Lighting m_lighting = new Lighting();
   // private final Compressor m_compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
 
   // Chooser for auto commands
@@ -86,20 +85,16 @@ public class RobotContainer {
       m_shooter.setSetpoint(getDesiredShooterSpeed());
       m_shooter.setHoodAngle(getDesiredShooterHoodAngle());
 
-      if (getDesiredShooterSpeed() > 0) {
-        m_lighting.setRobotState(RobotState.Shooting);
-      } else {
-        m_lighting.setRobotState(RobotState.Active);
-      }
+      /*
+       * if (getDesiredShooterSpeed() > 0) { m_lighting.setRobotState(RobotState.Shooting); } else {
+       * m_lighting.setRobotState(RobotState.Active); }
+       */
 
 
-      if (m_lighting.getRobotState() == RobotState.Active) {
-        if (m_shooter.upToSpeed()) {
-          m_lighting.setLEDColor(133, 100, 100);
-        } else {
-          m_lighting.setLEDColor(0, 0, 0);
-        }
-      }
+      /*
+       * if (m_lighting.getRobotState() == RobotState.Active) { if (m_shooter.upToSpeed()) {
+       * m_lighting.setLEDColor(133, 100, 100); } else { m_lighting.setLEDColor(0, 0, 0); } }
+       */
     }, m_shooter));
 
     // Default Turret command

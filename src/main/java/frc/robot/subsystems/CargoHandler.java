@@ -57,7 +57,7 @@ public class CargoHandler extends SubsystemBase {
     }
 
     public boolean getQueue1Sensor() {
-        return m_queueSensor1.get();
+        return !m_queueSensor1.get();
     }
 
     public boolean getQueue2Sensor() {
