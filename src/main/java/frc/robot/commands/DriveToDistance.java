@@ -7,17 +7,17 @@ import frc.robot.subsystems.DriveSubsystem;
 public class DriveToDistance extends CommandBase {
     private DriveSubsystem m_drive;
 
-    private PIDController distancePID = new PIDController(0.085, 0, 0); //TODO: Tune
-    private PIDController rotationPID = new PIDController(0.1, 0, 0.005); //TODO: Tune
+    private PIDController distancePID = new PIDController(0.085, 0, 0); // TODO: Tune
+    private PIDController rotationPID = new PIDController(0.1, 0, 0.005); // TODO: Tune
 
 
     public DriveToDistance(double targetDistance, DriveSubsystem drive) {
         m_drive = drive;
         addRequirements(drive);
         distancePID.setSetpoint(targetDistance);
-        distancePID.setTolerance(5, 2); //TODO: tune
+        distancePID.setTolerance(5, 2); // TODO: tune
     }
-    
+
     @Override
     public void initialize() {
         m_drive.resetEncoder();
@@ -27,15 +27,15 @@ public class DriveToDistance extends CommandBase {
     @Override
     public void execute() {
         double speed = distancePID.calculate(m_drive.getDistance());
-        double maxSpeed = .55; //TODO: Tune
+        double maxSpeed = .55; // TODO: Tune
 
-        if (speed > maxSpeed) 
+        if (speed > maxSpeed)
             speed = maxSpeed;
         else if (speed < -maxSpeed)
             speed = -maxSpeed;
 
         double rotSpeed = rotationPID.calculate(m_drive.getHeading());
-        double maxRotSpeed = .8; //TODO: Tune
+        double maxRotSpeed = .8; // TODO: Tune
 
         if (rotSpeed > maxRotSpeed)
             rotSpeed = maxRotSpeed;
@@ -48,7 +48,7 @@ public class DriveToDistance extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        m_drive.arcadeDrive(0,0);
+        m_drive.arcadeDrive(0, 0);
     }
 
     @Override

@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.TurretConstants;
-import frc.robot.commands.AutoTemplate1;
-import frc.robot.commands.AutoTemplate2;
+import frc.robot.commands.Auto2Ball;
+import frc.robot.commands.Auto4Ball;
 import frc.robot.commands.AutoTemplate3;
 import frc.robot.commands.AutoTemplate4;
 import frc.robot.commands.AutoTemplate5;
@@ -133,8 +133,8 @@ public class RobotContainer {
 
 
     // Auto mode selector
-    m_chooser.setDefaultOption("Default Auto", new AutoTemplate1(m_drive));
-    m_chooser.addOption("Auto2", new AutoTemplate2(m_drive));
+    m_chooser.setDefaultOption("Default Auto", new Auto2Ball(m_drive));
+    m_chooser.addOption("Auto2", new Auto4Ball(m_drive));
     m_chooser.addOption("Auto3", new AutoTemplate3(m_drive));
     m_chooser.addOption("Auto4", new AutoTemplate4(m_drive));
     m_chooser.addOption("Auto5", new AutoTemplate5(m_drive));
