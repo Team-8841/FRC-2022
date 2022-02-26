@@ -9,10 +9,10 @@ import frc.robot.Constants.MiscConstants;
 public class Lighting extends SubsystemBase {
 
     public enum RobotState {
-        Idle, Active
+        Idle, Active, Shooting
     }
 
-    private RobotState m_rState;
+    private RobotState m_rState = RobotState.Idle;
 
     private final AddressableLED m_led = new AddressableLED(MiscConstants.kLEDPort);
 
@@ -43,13 +43,21 @@ public class Lighting extends SubsystemBase {
         m_rainbowFirstPixelHue %= 180;
     }
 
+    public void setLEDColor(int h, int s, int v) {
+        for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+            m_ledBuffer.setHSV(i, h, s, v);
+        }
+
+        m_led.setData(m_ledBuffer);
+    }
 
     @Override
     public void periodic() {
         updateStatus();
 
-        rainbow();
-
+        if (m_rState == RobotState.Idle) {
+            rainbow();
+        }
         m_led.setData(m_ledBuffer);
     }
 
