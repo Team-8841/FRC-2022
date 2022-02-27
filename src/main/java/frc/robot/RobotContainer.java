@@ -17,9 +17,7 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.commands.Auto2Ball;
 import frc.robot.commands.Auto4Ball;
-import frc.robot.commands.AutoTemplate3;
-import frc.robot.commands.AutoTemplate4;
-import frc.robot.commands.AutoTemplate5;
+import frc.robot.commands.AutoLeaveTarmac;
 import frc.robot.subsystems.CargoHandler;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveSubsystem;
@@ -133,11 +131,9 @@ public class RobotContainer {
 
 
     // Auto mode selector
-    m_chooser.setDefaultOption("Default Auto", new Auto2Ball(m_drive));
-    m_chooser.addOption("Auto2", new Auto4Ball(m_drive));
-    m_chooser.addOption("Auto3", new AutoTemplate3(m_drive));
-    m_chooser.addOption("Auto4", new AutoTemplate4(m_drive));
-    m_chooser.addOption("Auto5", new AutoTemplate5(m_drive));
+    m_chooser.setDefaultOption("Default Leave Tarmac", new AutoLeaveTarmac(m_drive));
+    m_chooser.addOption("2 Ball Auto", new Auto2Ball(m_drive));
+    m_chooser.addOption("4 Ball Auto", new Auto4Ball(m_drive));
     SmartDashboard.putData("Auto Modes", m_chooser);
 
   }
