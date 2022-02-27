@@ -10,8 +10,11 @@ public class DriveToDistance extends CommandBase {
     private PIDController distancePID = new PIDController(0.085, 0, 0); // TODO: Tune
     private PIDController rotationPID = new PIDController(0.1, 0, 0.005); // TODO: Tune
 
+    private double m_maxSpeed;
 
-    public DriveToDistance(double targetDistance, DriveSubsystem drive) {
+
+    public DriveToDistance(double targetDistance, double speed, DriveSubsystem drive) {
+        m_maxSpeed = speed;
         m_drive = drive;
         addRequirements(drive);
         distancePID.setSetpoint(targetDistance);
@@ -27,12 +30,11 @@ public class DriveToDistance extends CommandBase {
     @Override
     public void execute() {
         double speed = distancePID.calculate(m_drive.getDistance());
-        double maxSpeed = .55; // TODO: Tune
 
-        if (speed > maxSpeed)
-            speed = maxSpeed;
-        else if (speed < -maxSpeed)
-            speed = -maxSpeed;
+        if (speed > m_maxSpeed)
+            speed = m_maxSpeed;
+        else if (speed < -m_maxSpeed)
+            speed = -m_maxSpeed;
 
         double rotSpeed = rotationPID.calculate(m_drive.getHeading());
         double maxRotSpeed = .8; // TODO: Tune

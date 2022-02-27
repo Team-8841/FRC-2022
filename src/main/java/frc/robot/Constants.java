@@ -104,13 +104,13 @@ public final class Constants {
                 public static final int kRearLiftMotorPort = 12;
                 public static final int kRearPivotMotorPort = 13;
 
-                public static final int kFrontTopLimitSensorPort = 4;
-                public static final int kFrontBottomLimitSensorPort = 5;
+                public static final int kFrontTopLimitSensorPort = 9;
+                public static final int kFrontBottomLimitSensorPort = 8;
 
-                public static final int kRearForwardLimitSensorPort = 6;
-                public static final int kRearBackLimitSensorPort = 7;
-                public static final int kRearTopLimitSensorPort = 8;
-                public static final int kRearBottomLimitSensorPort = 9;
+                public static final int kRearForwardLimitSensorPort = 4;
+                public static final int kRearBackLimitSensorPort = 5;
+                public static final int kRearTopLimitSensorPort = 7;
+                public static final int kRearBottomLimitSensorPort = 6;
         }
 
         public static final class MiscConstants {
@@ -139,8 +139,16 @@ public final class Constants {
                 public static final int kClimberSwitchPort = 9;
                 public static final int kIntakeSolenoidPort = 12;
 
-                public static final int kTurretJoystickXPort = 2;
-                public static final int kClimberJoystickYPort = 0;
+                public static final int kMiniJoystick1XPort = 2;
+                public static final int kMiniJoystick1YPort = 3;
+
+                public static final int kMiniJoystick2XPort = 1;
+                public static final int kMiniJoystick2YPort = 0;
+
+                public static final int kMiniJoystick3XPort = 7;
+                public static final int kMiniJoystick3YPort = 8;
+
+
         }
 
 }

@@ -22,6 +22,8 @@ import frc.robot.subsystems.CargoHandler;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.DriveSubsystem.DriveState;
+import frc.robot.subsystems.Lighting;
+import frc.robot.subsystems.Lighting.LightingState;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.Vision;
@@ -40,7 +42,7 @@ public class RobotContainer {
   private final Vision m_vision = new Vision();
   private final Turret m_turret = new Turret();
   private final Climber m_climber = new Climber();
-  // private final Lighting m_lighting = new Lighting();
+  private final Lighting m_lighting = new Lighting();
   // private final Compressor m_compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
 
   // Chooser for auto commands
@@ -64,7 +66,6 @@ public class RobotContainer {
         -m_rightJoystick.getY(), m_rightJoystick.getX()), m_drive));
 
     // Default Vision command
-
     m_vision.setDefaultCommand(new RunCommand(() -> {
       m_vision.updateStatus();
 
@@ -75,24 +76,12 @@ public class RobotContainer {
       }
     }, m_vision));
 
-
-
     // Default Shooter command
     m_shooter.setDefaultCommand(new RunCommand(() -> {
       // m_shooter.tune(); // TODO: comment this out after tuning shooter
       m_shooter.setSetpoint(getDesiredShooterSpeed());
       m_shooter.setHoodAngle(getDesiredShooterHoodAngle());
 
-      /*
-       * if (getDesiredShooterSpeed() > 0) { m_lighting.setRobotState(RobotState.Shooting); } else {
-       * m_lighting.setRobotState(RobotState.Active); }
-       */
-
-
-      /*
-       * if (m_lighting.getRobotState() == RobotState.Active) { if (m_shooter.upToSpeed()) {
-       * m_lighting.setLEDColor(133, 100, 100); } else { m_lighting.setLEDColor(0, 0, 0); } }
-       */
     }, m_shooter));
 
     // Default Turret command
@@ -113,11 +102,11 @@ public class RobotContainer {
           }
         }
         m_turret.setSpeed(turretSpeed);
-      } else {
+      } else if (!m_copilotDS.getRawButton(OIConstants.kVisionSwitchPort)
+          && !m_copilotDS.getRawButton(OIConstants.kClimbModeSwitchPort)) {
         // Manual Control
         m_turret.setSpeed(getDesiredTurretSpeed());
       }
-
     }, m_turret));
 
 
@@ -130,10 +119,65 @@ public class RobotContainer {
     }, m_cargoHandler));
 
 
+    // Default climber command
+    m_climber.setDefaultCommand(new RunCommand(() -> {
+      if (m_copilotDS.getRawButton(OIConstants.kClimbModeSwitchPort)) {
+
+        double commandedFrontLiftSpeed = getDesiredFrontLiftSpeed();
+        double commandedRearLiftSpeed = getDesiredRearLiftSpeed();
+        double commandedRearPivotSpeed = getDesiredRearPivotSpeed();
+
+        if (m_climber.getFrontTopSensor() && commandedFrontLiftSpeed > 0) {
+          m_climber.setFrontLiftMotorSpeed(0);
+        } else if (m_climber.getFrontBottomSensor() && commandedFrontLiftSpeed < 0) {
+          m_climber.setFrontLiftMotorSpeed(0);
+        } else {
+          m_climber.setFrontLiftMotorSpeed(commandedFrontLiftSpeed);
+        }
+
+        if (m_climber.getRearTopSensor() && commandedRearLiftSpeed > 0) {
+          m_climber.setRearLiftMotorSpeed(0);
+        } else if (m_climber.getRearBottomSensor() && commandedRearLiftSpeed < 0) {
+          m_climber.setRearLiftMotorSpeed(0);
+        } else {
+          m_climber.setRearLiftMotorSpeed(commandedRearLiftSpeed);
+        }
+
+        if (m_climber.getRearForwardSensor() && commandedRearPivotSpeed > 0) {
+          m_climber.setRearPivotMotorSpeed(0);
+        } else if (m_climber.getRearBackSensor() && commandedRearPivotSpeed < 0) {
+          m_climber.setRearPivotMotorSpeed(0);
+        } else {
+          m_climber.setRearPivotMotorSpeed(commandedRearPivotSpeed);
+        }
+      } else {
+        m_climber.setFrontLiftMotorSpeed(0);
+        m_climber.setRearLiftMotorSpeed(0);
+        m_climber.setRearPivotMotorSpeed(0);
+      }
+    }));
+
+    // Default lighting command
+    m_lighting.setDefaultCommand(new RunCommand(() -> {
+      if (getDesiredShooterSpeed() > 0) {
+        m_lighting.setLightingState(LightingState.Shooting);
+      } else {
+        m_lighting.setLightingState(LightingState.Active);
+      }
+
+      if (m_lighting.getLightingState() == LightingState.Shooting) {
+        if (m_shooter.upToSpeed()) {
+          m_lighting.setLEDColor(133, 100, 100);
+        } else if (m_lighting.getLightingState() == LightingState.Active) {
+          m_lighting.setLEDColor(120, 100, 100);
+        }
+      }
+    }));
+
     // Auto mode selector
     m_chooser.setDefaultOption("Default Leave Tarmac", new AutoLeaveTarmac(m_drive));
-    m_chooser.addOption("2 Ball Auto", new Auto2Ball(m_drive));
-    m_chooser.addOption("4 Ball Auto", new Auto4Ball(m_drive));
+    m_chooser.addOption("2 Ball Auto", new Auto2Ball(m_drive, m_cargoHandler, m_shooter));
+    m_chooser.addOption("4 Ball Auto", new Auto4Ball(m_drive, m_cargoHandler, m_shooter));
     SmartDashboard.putData("Auto Modes", m_chooser);
 
   }
@@ -182,7 +226,7 @@ public class RobotContainer {
   }
 
   public double getDesiredTurretSpeed() {
-    double turretStickX = m_copilotDS.getRawAxis(OIConstants.kTurretJoystickXPort);
+    double turretStickX = m_copilotDS.getRawAxis(OIConstants.kMiniJoystick1XPort);
     if (turretStickX < 0.03) {
       return -0.5;
     } else if (turretStickX > 0.07) {
@@ -245,6 +289,43 @@ public class RobotContainer {
     }
 
     return speed;
+  }
+
+  public double getDesiredFrontLiftSpeed() {
+    double ClimberStickY = m_copilotDS.getRawAxis(OIConstants.kMiniJoystick2YPort);
+    SmartDashboard.putNumber("[Climber] Front Lift Y", ClimberStickY);
+    if (ClimberStickY < 0.035) {
+      return -0.4;
+    } else if (ClimberStickY > 0.075) {
+      return 0.4;
+    } else {
+      return 0;
+    }
+  }
+
+
+  public double getDesiredRearLiftSpeed() {
+    double ClimberStickY = m_copilotDS.getRawAxis(OIConstants.kMiniJoystick3YPort);
+    SmartDashboard.putNumber("[Climber] Rear Lift Y", ClimberStickY);
+    if (ClimberStickY < 0.035) {
+      return -0.4;
+    } else if (ClimberStickY > 0.075) {
+      return 0.4;
+    } else {
+      return 0;
+    }
+  }
+
+  public double getDesiredRearPivotSpeed() {
+    double ClimberStickY = m_copilotDS.getRawAxis(OIConstants.kMiniJoystick1YPort);
+    SmartDashboard.putNumber("[Climber] Front pivot Y", ClimberStickY);
+    if (ClimberStickY < 0.035) {
+      return -0.4;
+    } else if (ClimberStickY > 0.075) {
+      return 0.4;
+    } else {
+      return 0;
+    }
   }
 
   /**

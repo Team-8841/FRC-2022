@@ -8,11 +8,11 @@ import frc.robot.Constants.MiscConstants;
 
 public class Lighting extends SubsystemBase {
 
-    public enum RobotState {
+    public enum LightingState {
         Idle, Active, Shooting
     }
 
-    private RobotState m_rState = RobotState.Idle;
+    private LightingState m_rState = LightingState.Idle;
 
     private final AddressableLED m_led = new AddressableLED(MiscConstants.kLEDPort);
 
@@ -24,11 +24,11 @@ public class Lighting extends SubsystemBase {
 
     private int m_rainbowFirstPixelHue;
 
-    public void setRobotState(RobotState state) {
+    public void setLightingState(LightingState state) {
         m_rState = state;
     }
 
-    public RobotState getRobotState() {
+    public LightingState getLightingState() {
         return m_rState;
     }
 
@@ -55,15 +55,14 @@ public class Lighting extends SubsystemBase {
     public void periodic() {
         updateStatus();
 
-        if (m_rState == RobotState.Idle) {
-            rainbow();
-            m_led.setData(m_ledBuffer);
-        }
+        /*
+         * if (m_rState == LightingState.Idle) { rainbow(); m_led.setData(m_ledBuffer); }
+         */
 
     }
 
     private void updateStatus() {
-        SmartDashboard.putString("[Lighting]: Robot State", getRobotState().toString());
+        SmartDashboard.putString("[Lighting]: Robot State", getLightingState().toString());
     }
 
 }
