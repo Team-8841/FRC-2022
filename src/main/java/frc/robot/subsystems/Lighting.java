@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MiscConstants;
 
+// Guide: https://docs.wpilib.org/en/stable/docs/software/hardware-apis/misc/addressable-leds.html
 public class Lighting extends SubsystemBase {
 
     public enum LightingState {
@@ -23,6 +24,10 @@ public class Lighting extends SubsystemBase {
     private int changeTimer = 0;
 
     private int m_rainbowFirstPixelHue;
+
+    public void Lighting() {
+        m_led.setLength(m_ledBuffer.getLength());
+    }
 
     public void setLightingState(LightingState state) {
         m_rState = state;
