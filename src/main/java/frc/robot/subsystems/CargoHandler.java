@@ -4,8 +4,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CargoHandlerConstants;
@@ -15,8 +13,8 @@ public class CargoHandler extends SubsystemBase {
     private final VictorSPX m_queueMotor1 = new VictorSPX(CargoHandlerConstants.kQueue1MotorPort);
     private final VictorSPX m_queueMotor2 = new VictorSPX(CargoHandlerConstants.kQueue2MotorPort);
 
-    private final Solenoid m_intakeArm =
-            new Solenoid(PneumaticsModuleType.CTREPCM, CargoHandlerConstants.kIntakeSolenoidPort);
+    // private final Solenoid m_intakeArm =
+    // new Solenoid(PneumaticsModuleType.CTREPCM, CargoHandlerConstants.kIntakeSolenoidPort);
 
     private final DigitalInput m_queueSensor1 =
             new DigitalInput(CargoHandlerConstants.kQueue1SensorPort);
@@ -44,11 +42,12 @@ public class CargoHandler extends SubsystemBase {
 
 
     public void setIntakeSolenoid(boolean state) {
-        m_intakeArm.set(state);
+        // m_intakeArm.set(state);
     }
 
     public boolean getIntakeSolenoidDown() {
-        return m_intakeArm.get();
+        // return m_intakeArm.get();
+        return false;
     }
 
     public void setIntake(double speed) {
@@ -82,41 +81,41 @@ public class CargoHandler extends SubsystemBase {
         double queue1Speed = .4;
         double queue2Speed = .3;
 
-        if (getIntakeSolenoidDown()) {
-            if (intakeOut) {
+        // if (getIntakeSolenoidDown()) {
+        if (intakeOut) {
+            setIntake(-intakeSpeed);
+            setQueue1(-queue1Speed);
+            setQueue2(-queue2Speed);
+        } else if (intakeIn) {
+            // No cargo
+            if (!getQueue1Sensor() & !getQueue2Sensor()) {
+                setIntake(intakeSpeed);
+                setQueue1(queue1Speed);
+                setQueue2(queue2Speed);
+            }
+            // cargo in queue 1
+            else if (getQueue1Sensor() & !getQueue2Sensor()) {
+                setIntake(intakeSpeed);
+                setQueue1(queue1Speed);
+                setQueue2(queue2Speed);
+            }
+            // cargo in queue 2
+            else if (!getQueue1Sensor() & getQueue2Sensor()) {
+                setIntake(intakeSpeed);
+                setQueue1(queue1Speed);
+                setQueue2(0);
+            }
+            // cargo in queue 1 and 2
+            else if (getQueue1Sensor() & getQueue2Sensor()) {
                 setIntake(-intakeSpeed);
-                setQueue1(-queue1Speed);
-                setQueue2(-queue2Speed);
-            } else if (intakeIn) {
-                // No cargo
-                if (!getQueue1Sensor() & !getQueue2Sensor()) {
-                    setIntake(intakeSpeed);
-                    setQueue1(queue1Speed);
-                    setQueue2(queue2Speed);
-                }
-                // cargo in queue 1
-                else if (getQueue1Sensor() & !getQueue2Sensor()) {
-                    setIntake(intakeSpeed);
-                    setQueue1(queue1Speed);
-                    setQueue2(queue2Speed);
-                }
-                // cargo in queue 2
-                else if (!getQueue1Sensor() & getQueue2Sensor()) {
-                    setIntake(intakeSpeed);
-                    setQueue1(queue1Speed);
-                    setQueue2(0);
-                }
-                // cargo in queue 1 and 2
-                else if (getQueue1Sensor() & getQueue2Sensor()) {
-                    setIntake(-intakeSpeed);
-                    setQueue1(0);
-                    setQueue2(0);
-                }
-            } else {
-                setIntake(0);
                 setQueue1(0);
                 setQueue2(0);
             }
+        } else {
+            setIntake(0);
+            setQueue1(0);
+            setQueue2(0);
         }
+        // }
     }
 }

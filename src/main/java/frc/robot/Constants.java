@@ -64,14 +64,14 @@ public final class Constants {
                 public static final double kMinOutput = 0;
                 public static final double kAllowedError = 200; // TODO: Tune
 
-                public static final double kShooterSpeed1 = 1000;
-                public static final double kShooterSpeed2 = 2500;
-                public static final double kShooterSpeed3 = 3500;
-                public static final double kShooterSpeed4 = 4500;
+                public static final double kShooterSpeed1 = 2500;
+                public static final double kShooterSpeed2 = 3500;
+                public static final double kShooterSpeed3 = 4100;
+                public static final double kShooterSpeed4 = 5000;
 
-                public static final double kShooterHoodAngle1 = 0.3;// TODO: Tune
-                public static final double kShooterHoodAngle2 = 0.5;// TODO: Tune
-                public static final double kShooterHoodAngle3 = 0.75;// TODO: Tune
+                public static final double kShooterHoodAngle1 = 0.5;// TODO: Tune
+                public static final double kShooterHoodAngle2 = 0.65;// TODO: Tune
+                public static final double kShooterHoodAngle3 = 0.8;// TODO: Tune
 
                 public static final double kDefaultHoodAngle = 0.6;// TODO: Tune
         }
@@ -114,8 +114,8 @@ public final class Constants {
         }
 
         public static final class MiscConstants {
-                public static final int kLEDPort = 3;
-                public static final int kLEDBufferLength = 60; // Default is 60 leds
+                public static final int kLEDPort = 6;
+                public static final int kLEDBufferLength = 104; // Default is 60 leds 104 on robot
         }
 
         public static final class OIConstants {

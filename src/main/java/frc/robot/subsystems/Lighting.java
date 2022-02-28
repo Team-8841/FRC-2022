@@ -14,7 +14,7 @@ public class Lighting extends SubsystemBase {
 
     private LightingState m_rState = LightingState.Idle;
 
-    private final AddressableLED m_led = new AddressableLED(MiscConstants.kLEDPort);
+    private AddressableLED m_led = new AddressableLED(MiscConstants.kLEDPort);
 
     private final AddressableLEDBuffer m_ledBuffer =
             new AddressableLEDBuffer(MiscConstants.kLEDBufferLength);
