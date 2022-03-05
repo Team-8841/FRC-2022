@@ -130,7 +130,7 @@ public final class Constants {
 
                 // copilot inputs
                 // TODO: Figureout what switch is what
-                public static final int kVisionSwitchPort = 1;
+                public static final int kVisionSwitchPort = 14;
                 public static final int kCompressorSwitchPort = 2;
                 public static final int kClimbModeSwitchPort = 3;
                 public static final int kIntakeInPort = 4;

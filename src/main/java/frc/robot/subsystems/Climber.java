@@ -47,11 +47,11 @@ public class Climber extends SubsystemBase {
 
 
     public boolean getFrontTopSensor() {
-        return m_frontTopLimit.get();
+        return !m_frontTopLimit.get();
     }
 
     public boolean getFrontBottomSensor() {
-        return m_frontBottomLimit.get();
+        return !m_frontBottomLimit.get();
     }
 
     public boolean getRearForwardSensor() {
@@ -63,11 +63,11 @@ public class Climber extends SubsystemBase {
     }
 
     public boolean getRearTopSensor() {
-        return m_rearTopLimit.get();
+        return !m_rearTopLimit.get();
     }
 
     public boolean getRearBottomSensor() {
-        return m_rearBottomLimit.get();
+        return !m_rearBottomLimit.get();
     }
 
     public void setFrontLiftMotorSpeed(double speed) {

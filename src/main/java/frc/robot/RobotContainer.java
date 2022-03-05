@@ -23,6 +23,7 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.DriveSubsystem.DriveState;
 import frc.robot.subsystems.Lighting;
+import frc.robot.subsystems.Lighting.LightingState;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.Vision;
@@ -119,44 +120,67 @@ public class RobotContainer {
 
 
     // Default climber command
-    /*
-     * m_climber.setDefaultCommand(new RunCommand(() -> { if
-     * (m_copilotDS.getRawButton(OIConstants.kClimbModeSwitchPort)) {
-     * 
-     * double commandedFrontLiftSpeed = getDesiredFrontLiftSpeed(); double commandedRearLiftSpeed =
-     * getDesiredRearLiftSpeed(); double commandedRearPivotSpeed = getDesiredRearPivotSpeed();
-     * 
-     * if (m_climber.getFrontTopSensor() && commandedFrontLiftSpeed > 0) {
-     * m_climber.setFrontLiftMotorSpeed(0); } else if (m_climber.getFrontBottomSensor() &&
-     * commandedFrontLiftSpeed < 0) { m_climber.setFrontLiftMotorSpeed(0); } else {
-     * m_climber.setFrontLiftMotorSpeed(commandedFrontLiftSpeed); }
-     * 
-     * if (m_climber.getRearTopSensor() && commandedRearLiftSpeed > 0) {
-     * m_climber.setRearLiftMotorSpeed(0); } else if (m_climber.getRearBottomSensor() &&
-     * commandedRearLiftSpeed < 0) { m_climber.setRearLiftMotorSpeed(0); } else {
-     * m_climber.setRearLiftMotorSpeed(commandedRearLiftSpeed); }
-     * 
-     * if (m_climber.getRearForwardSensor() && commandedRearPivotSpeed > 0) {
-     * m_climber.setRearPivotMotorSpeed(0); } else if (m_climber.getRearBackSensor() &&
-     * commandedRearPivotSpeed < 0) { m_climber.setRearPivotMotorSpeed(0); } else {
-     * m_climber.setRearPivotMotorSpeed(commandedRearPivotSpeed); } } else {
-     * m_climber.setFrontLiftMotorSpeed(0); m_climber.setRearLiftMotorSpeed(0);
-     * m_climber.setRearPivotMotorSpeed(0); } }));
-     */
+
+    m_climber.setDefaultCommand(new RunCommand(() -> {
+      if (m_copilotDS.getRawButton(OIConstants.kClimbModeSwitchPort)) {
+
+        double commandedFrontLiftSpeed = getDesiredFrontLiftSpeed();
+        double commandedRearLiftSpeed = getDesiredRearLiftSpeed();
+        double commandedRearPivotSpeed = getDesiredRearPivotSpeed();
+
+        if (m_climber.getFrontTopSensor() && commandedFrontLiftSpeed > 0) {
+          m_climber.setFrontLiftMotorSpeed(0);
+        } else if (m_climber.getFrontBottomSensor() && commandedFrontLiftSpeed < 0) {
+          m_climber.setFrontLiftMotorSpeed(0);
+        } else {
+          m_climber.setFrontLiftMotorSpeed(commandedFrontLiftSpeed);
+        }
+
+        if (m_climber.getRearTopSensor() && commandedRearLiftSpeed > 0) {
+          m_climber.setRearLiftMotorSpeed(0);
+        } else if (m_climber.getRearBottomSensor() && commandedRearLiftSpeed < 0) {
+          m_climber.setRearLiftMotorSpeed(0);
+        } else {
+          m_climber.setRearLiftMotorSpeed(commandedRearLiftSpeed);
+        }
+
+        if (m_climber.getRearForwardSensor() && commandedRearPivotSpeed > 0) {
+          m_climber.setRearPivotMotorSpeed(0);
+        } else if (m_climber.getRearBackSensor() && commandedRearPivotSpeed < 0) {
+          m_climber.setRearPivotMotorSpeed(0);
+        } else {
+          m_climber.setRearPivotMotorSpeed(commandedRearPivotSpeed);
+        }
+      } else {
+        m_climber.setFrontLiftMotorSpeed(0);
+        m_climber.setRearLiftMotorSpeed(0);
+        m_climber.setRearPivotMotorSpeed(0);
+      }
+    }));
+
 
     // Default lighting command
-    /*
-     * m_lighting.setDefaultCommand(new RunCommand(() -> { if (getDesiredShooterSpeed() > 0) {
-     * m_lighting.setLightingState(LightingState.Shooting); } else {
-     * m_lighting.setLightingState(LightingState.Active); }
-     * 
-     * if (m_lighting.getLightingState() == LightingState.Shooting) { if (m_shooter.upToSpeed()) {
-     * m_lighting.setLEDColor(133, 100, 100); } else if (m_lighting.getLightingState() ==
-     * LightingState.Active) { m_lighting.setLEDColor(120, 100, 100); } else if
-     * (m_lighting.getLightingState() == LightingState.Idle) { m_lighting.setLEDColor(50, 100, 100);
-     * } } }, m_lighting));
-     * 
-     */
+
+    m_lighting.setDefaultCommand(new RunCommand(() -> {
+      if (getDesiredShooterSpeed() > 0) {
+        m_lighting.setLightingState(LightingState.Shooting);
+      } else {
+        m_lighting.setLightingState(LightingState.Active);
+      }
+
+      if (m_lighting.getLightingState() == LightingState.Shooting) {
+        if (m_shooter.upToSpeed()) {
+          m_lighting.setLEDColor(133, 100, 100);
+        }
+      } else if (m_lighting.getLightingState() == LightingState.Active) {
+        m_lighting.setLEDColor(120, 100, 100);
+      } else if (m_lighting.getLightingState() == LightingState.Idle) {
+        m_lighting.rainbow();
+      }
+
+    }, m_lighting));
+
+
     // Auto mode selector
     m_chooser.setDefaultOption("Default Leave Tarmac", new AutoLeaveTarmac(m_drive));
     m_chooser.addOption("2 Ball Auto", new Auto2Ball(m_drive, m_cargoHandler, m_shooter));
