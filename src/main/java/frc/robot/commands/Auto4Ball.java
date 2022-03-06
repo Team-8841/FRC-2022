@@ -10,10 +10,8 @@ import frc.robot.subsystems.Shooter;
 public class Auto4Ball extends SequentialCommandGroup {
 
     public Auto4Ball(DriveSubsystem drive, CargoHandler cargoHandler, Shooter shooter) {
-        /*
-         * new WaitCommand(.5), new DriveToDistance(20, drive), new TurnToAngle(90, drive),
-         */
-        super(//
+// To save this file without it auto formatting use ctrl + k then ctrl + shift + s
+        super(// TODO: reprogram this
                 new ResetDriveSensors(drive), //
                 new SequentialCommandGroup(//
                         new IntakeInAndOut(true, true, cargoHandler), //

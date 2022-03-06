@@ -10,7 +10,7 @@ import frc.robot.Constants.MiscConstants;
 public class Lighting extends SubsystemBase {
 
     public enum LightingState {
-        Idle, Active, Shooting
+        Idle, Active, Shooting, ESTOP
     }
 
     private LightingState m_rState = LightingState.Idle;
@@ -50,9 +50,9 @@ public class Lighting extends SubsystemBase {
         m_led.setData(m_ledBuffer);
     }
 
-    public void setLEDColor(int h, int s, int v) {
+    public void setLEDColor(int r, int g, int b) {
         for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-            m_ledBuffer.setHSV(i, h, s, v);
+            m_ledBuffer.setRGB(i, r, g, b);
         }
 
         m_led.setData(m_ledBuffer);

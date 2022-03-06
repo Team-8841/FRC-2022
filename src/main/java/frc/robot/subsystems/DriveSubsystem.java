@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -26,7 +27,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final CANSparkMax m_rightBackMotor =
       new CANSparkMax(DriveConstants.k_rightBackMotorPort, MotorType.kBrushless);
 
-  // private final RelativeEncoder m_encoder;
+  private final RelativeEncoder m_encoder;
 
   private AHRS m_gyro;
 
@@ -58,9 +59,9 @@ public class DriveSubsystem extends SubsystemBase {
     configureSpark(m_leftBackMotor);
     configureSpark(m_rightFrontMotor);
     configureSpark(m_rightBackMotor);
-    m_drive.setMaxOutput(0.7);
+    m_drive.setMaxOutput(1); // TODO: Tune max speed
 
-    // m_encoder = m_leftFrontMotor.getEncoder();
+    m_encoder = m_leftFrontMotor.getEncoder();
 
     // Setup gyro
     try {
@@ -95,6 +96,8 @@ public class DriveSubsystem extends SubsystemBase {
       case TANK_DRIVE:
         m_rightFrontMotor.setInverted(false);
         m_rightBackMotor.setInverted(false);
+        m_leftFrontMotor.setInverted(false);
+        m_leftBackMotor.setInverted(false);
 
         m_drive.tankDrive(left, right);
         break;
@@ -103,6 +106,8 @@ public class DriveSubsystem extends SubsystemBase {
 
         m_rightFrontMotor.setInverted(true);
         m_rightBackMotor.setInverted(true);
+        m_leftFrontMotor.setInverted(false);
+        m_leftBackMotor.setInverted(false);
 
         m_mecDrive.driveCartesian(left, right, 0, m_gyro.getAngle());
         break;
@@ -110,6 +115,11 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void arcadeDrive(double forward, double rotate) {
+    m_rightFrontMotor.setInverted(false);
+    m_rightBackMotor.setInverted(false);
+    m_leftFrontMotor.setInverted(true);
+    m_leftBackMotor.setInverted(true);
+
     m_drive.arcadeDrive(forward, rotate);
   }
 
@@ -145,17 +155,16 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public double getDistance() {
-    return 0.0;
-    // return m_encoder.getPosition();
+    return m_encoder.getPosition();
   }
 
   public void resetEncoder() {
-    // m_encoder.setPosition(0);
+    m_encoder.setPosition(0);
   }
 
   public void updateStatus() {
     SmartDashboard.putNumber("[DT] Heading", getHeading());
-    // SmartDashboard.putNumber("[DT] Distance", getDistance());
+    SmartDashboard.putNumber("[DT] Distance", getDistance());
   }
 
 }

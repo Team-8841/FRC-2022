@@ -31,7 +31,7 @@ public final class Constants {
                 public static final int kEncoderCPR = 42; // Neo encoder CPR
 
                 public static final double kWheelDiameterInches = 6.0; // Wheel diameter in inches
-                public static final double kWheelGearRatio = 8.0; // Drivetrain to wheel gear ratio
+                public static final double kWheelGearRatio = 7.6; // Drivetrain to wheel gear ratio
 
                 public static final double kEncoderDistancePerPulse =
                                 // Assumes the encoders are directly attached to the wheel shafts
@@ -92,7 +92,7 @@ public final class Constants {
                 public static final int kQueue1MotorPort = 9;
                 public static final int kQueue2MotorPort = 10;
 
-                public static final int kIntakeSolenoidPort = 1;
+                public static final int kIntakeSolenoidPort = 3;
 
                 public static final int kQueue1SensorPort = 0;
                 public static final int kQueue2SensorPort = 1;
@@ -131,8 +131,8 @@ public final class Constants {
                 // copilot inputs
                 // TODO: Figureout what switch is what
                 public static final int kVisionSwitchPort = 14;
-                public static final int kCompressorSwitchPort = 2;
-                public static final int kClimbModeSwitchPort = 3;
+                public static final int kCompressorSwitchPort = 3;
+                public static final int kClimbModeSwitchPort = 2;
                 public static final int kIntakeInPort = 4;
                 public static final int kIntakeOutPort = 5;
                 public static final int kClimberSolenoidPort = 6;

@@ -6,11 +6,11 @@ import frc.robot.subsystems.DriveSubsystem;
 public class AutoLeaveTarmac extends SequentialCommandGroup {
 
     public AutoLeaveTarmac(DriveSubsystem drive) {
-        super(//
-                new ResetDriveSensors(drive), //
-                new SequentialCommandGroup(//
-                        new DriveToDistance(40, .5, drive) // 50% speed
-                ));
+        super(
+            // To save this file without it auto formatting use ctrl + k then ctrl + shift + s
+            new ResetDriveSensors(drive), 
+            new DriveToDistance(20, .5, drive)
+        );
     }
 
 }

@@ -4,8 +4,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -43,7 +46,7 @@ public class RobotContainer {
   private final Turret m_turret = new Turret();
   private final Climber m_climber = new Climber();
   private final Lighting m_lighting = new Lighting();
-  // private final Compressor m_compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
+  private final Compressor m_compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
 
   // Chooser for auto commands
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -59,7 +62,8 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    // m_compressor.disable();
+    m_compressor.enableDigital();
+    m_compressor.disable();
 
     // Default Drive command
     m_drive.setDefaultCommand(new RunCommand(() -> m_drive.RobotDrive(m_leftJoystick.getY(),
@@ -113,7 +117,7 @@ public class RobotContainer {
     // Default CargoHandler command
 
     m_cargoHandler.setDefaultCommand(new RunCommand(() -> {
-      // m_cargoHandler.setIntakeSolenoid(m_copilotDS.getRawButton(OIConstants.kIntakeSolenoidPort));
+      m_cargoHandler.setIntakeSolenoid(m_copilotDS.getRawButton(OIConstants.kIntakeSolenoidPort));
       m_cargoHandler.sensorControl(m_copilotDS.getRawButton(OIConstants.kIntakeInPort),
           m_copilotDS.getRawButton(OIConstants.kIntakeOutPort));
     }, m_cargoHandler));
@@ -141,7 +145,7 @@ public class RobotContainer {
         } else if (m_climber.getRearBottomSensor() && commandedRearLiftSpeed < 0) {
           m_climber.setRearLiftMotorSpeed(0);
         } else {
-          m_climber.setRearLiftMotorSpeed(commandedRearLiftSpeed);
+          m_climber.setRearLiftMotorSpeed(0);
         }
 
         if (m_climber.getRearForwardSensor() && commandedRearPivotSpeed > 0) {
@@ -156,28 +160,45 @@ public class RobotContainer {
         m_climber.setRearLiftMotorSpeed(0);
         m_climber.setRearPivotMotorSpeed(0);
       }
-    }));
+    }, m_climber));
 
 
     // Default lighting command
 
     m_lighting.setDefaultCommand(new RunCommand(() -> {
-      if (getDesiredShooterSpeed() > 0) {
-        m_lighting.setLightingState(LightingState.Shooting);
-      } else {
-        m_lighting.setLightingState(LightingState.Active);
-      }
 
-      if (m_lighting.getLightingState() == LightingState.Shooting) {
-        if (m_shooter.upToSpeed()) {
-          m_lighting.setLEDColor(133, 100, 100);
+      if (RobotState.isDisabled()) {
+        m_lighting.setLightingState(LightingState.Idle);
+      } else if (RobotState.isEnabled()) {
+        if (getDesiredShooterSpeed() > 0) {
+          m_lighting.setLightingState(LightingState.Shooting);
+        } else {
+          m_lighting.setLightingState(LightingState.Active);
         }
-      } else if (m_lighting.getLightingState() == LightingState.Active) {
-        m_lighting.setLEDColor(120, 100, 100);
-      } else if (m_lighting.getLightingState() == LightingState.Idle) {
-        m_lighting.rainbow();
+      } else if (RobotState.isEStopped()) {
+        m_lighting.setLightingState(LightingState.ESTOP);
       }
 
+      if (m_lighting.getLightingState() == LightingState.Idle) {
+        m_lighting.rainbow();
+      } else if (m_lighting.getLightingState() == LightingState.Active) {
+        if (m_cargoHandler.getQueue1Sensor() && !m_cargoHandler.getQueue2Sensor()
+            || !m_cargoHandler.getQueue1Sensor() && m_cargoHandler.getQueue2Sensor()) {
+          m_lighting.setLEDColor(255, 255, 0);
+        } else if (m_cargoHandler.getQueue1Sensor() && m_cargoHandler.getQueue2Sensor()) {
+          m_lighting.setLEDColor(0, 0, 255);
+        } else if (!m_cargoHandler.getQueue1Sensor() && !m_cargoHandler.getQueue2Sensor()) {
+          m_lighting.setLEDColor(0, 0, 0);
+        }
+      } else if (m_lighting.getLightingState() == LightingState.Shooting) {
+        if (m_shooter.upToSpeed()) {
+          m_lighting.setLEDColor(0, 255, 0);
+        } else {
+          m_lighting.setLEDColor(244, 127, 5);
+        }
+      } else if (m_lighting.getLightingState() == LightingState.ESTOP) {
+        m_lighting.setLEDColor(255, 0, 0);
+      }
     }, m_lighting));
 
 
@@ -205,6 +226,19 @@ public class RobotContainer {
         .whenReleased(new RunCommand(() -> {
           m_drive.driveState(DriveState.TANK_DRIVE);
           SmartDashboard.putString("[DT]Drive State", "TANK_DRIVE");
+        }));
+
+    new JoystickButton(m_copilotDS, OIConstants.kCompressorSwitchPort)
+        .whenHeld(new RunCommand(() -> {
+          m_compressor.disable();
+          SmartDashboard.putBoolean("Compressor pressure switch",
+              m_compressor.getPressureSwitchValue());
+        }));
+    new JoystickButton(m_copilotDS, OIConstants.kCompressorSwitchPort)
+        .whenReleased(new RunCommand(() -> {
+          m_compressor.enableDigital();
+          SmartDashboard.putBoolean("Compressor pressure switch",
+              m_compressor.getPressureSwitchValue());
         }));
 
 
