@@ -22,10 +22,11 @@ public class Lighting extends SubsystemBase {
 
     private int m_rainbowFirstPixelHue;
 
-    public void Lighting() {
+    public Lighting() {
         updateStatus();
 
         m_led.setLength(m_ledBuffer.getLength());
+        m_led.start();
     }
 
     public void setLightingState(LightingState state) {
