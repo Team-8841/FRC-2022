@@ -55,7 +55,7 @@ public final class Constants {
                 public static final int kCurrentLimit = 80; // May need to tune
 
                 public static final int kEncoderCPR = 42; // NEO encoder 42 CPR
-                public static final double kP = 0.000230; // 0.000230;
+                public static final double kP = 0.000230; // 0.000230; 0.000630
                 public static final double kI = 0.000001; // 0.000001;
                 public static final double kD = 0;
                 public static final double kIZone = 330; // 330;
@@ -64,16 +64,15 @@ public final class Constants {
                 public static final double kMinOutput = 0;
                 public static final double kAllowedError = 200; // TODO: Tune
 
-                public static final double kShooterSpeed1 = 2500;
-                public static final double kShooterSpeed2 = 3500;
-                public static final double kShooterSpeed3 = 4100;
-                public static final double kShooterSpeed4 = 5000;
+                public static final double kShooterSpeed1 = 3700;
+                public static final double kShooterSpeed2 = 4350;
+                public static final double kShooterSpeed3 = 4500;
+                public static final double kShooterSpeed4 = 4700;
 
-                public static final double kShooterHoodAngle1 = 0.5;// TODO: Tune
-                public static final double kShooterHoodAngle2 = 0.65;// TODO: Tune
-                public static final double kShooterHoodAngle3 = 0.8;// TODO: Tune
-
-                public static final double kDefaultHoodAngle = 0.6;// TODO: Tune
+                public static final double kShooterHoodAngle1 = 0.55;// TODO: Tune Tarmac
+                public static final double kShooterHoodAngle2 = 0.39;// TODO: Tune Line
+                public static final double kShooterHoodAngle3 = 0.3;// TODO: Tune Safe
+                public static final double kShooterHoodAngle4 = 0.27;// TODO: Tune SURE
         }
 
         public static final class TurretConstants {
@@ -135,9 +134,10 @@ public final class Constants {
                 public static final int kClimbModeSwitchPort = 2;
                 public static final int kIntakeInPort = 4;
                 public static final int kIntakeOutPort = 5;
-                public static final int kClimberSolenoidPort = 6;
                 public static final int kClimberSwitchPort = 9;
                 public static final int kIntakeSolenoidPort = 12;
+                public static final int kAutoMode1Port = 8;
+                public static final int kAutoMode2Port = 6;
 
                 public static final int kMiniJoystick1XPort = 2;
                 public static final int kMiniJoystick1YPort = 3;

@@ -59,7 +59,7 @@ public class DriveSubsystem extends SubsystemBase {
     configureSpark(m_leftBackMotor);
     configureSpark(m_rightFrontMotor);
     configureSpark(m_rightBackMotor);
-    m_drive.setMaxOutput(1); // TODO: Tune max speed
+    m_drive.setMaxOutput(0.8); // TODO: Tune max speed
 
     m_encoder = m_leftFrontMotor.getEncoder();
 
@@ -109,7 +109,7 @@ public class DriveSubsystem extends SubsystemBase {
         m_leftFrontMotor.setInverted(false);
         m_leftBackMotor.setInverted(false);
 
-        m_mecDrive.driveCartesian(left, right, 0, m_gyro.getAngle());
+        m_mecDrive.driveCartesian(left, mech, 0, m_gyro.getAngle());
         break;
     }
   }

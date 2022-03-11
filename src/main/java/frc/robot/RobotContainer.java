@@ -20,7 +20,6 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.commands.Auto2Ball;
 import frc.robot.commands.Auto4Ball;
-import frc.robot.commands.AutoLeaveTarmac;
 import frc.robot.subsystems.CargoHandler;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveSubsystem;
@@ -51,6 +50,8 @@ public class RobotContainer {
   // Chooser for auto commands
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
+  Command m_autoCommand;
+
   private final Joystick m_leftJoystick = new Joystick(OIConstants.kLeftjoystickPort);
   private final Joystick m_rightJoystick = new Joystick(OIConstants.kRightjoystickPort);
   private final Joystick m_copilotDS = new Joystick(OIConstants.kCopilotDsPort);
@@ -64,7 +65,6 @@ public class RobotContainer {
 
     m_compressor.enableDigital();
     m_compressor.disable();
-
     // Default Drive command
     m_drive.setDefaultCommand(new RunCommand(() -> m_drive.RobotDrive(m_leftJoystick.getY(),
         -m_rightJoystick.getY(), m_rightJoystick.getX()), m_drive));
@@ -145,12 +145,12 @@ public class RobotContainer {
         } else if (m_climber.getRearBottomSensor() && commandedRearLiftSpeed < 0) {
           m_climber.setRearLiftMotorSpeed(0);
         } else {
-          m_climber.setRearLiftMotorSpeed(0);
+          m_climber.setRearLiftMotorSpeed(commandedRearLiftSpeed);
         }
 
-        if (m_climber.getRearForwardSensor() && commandedRearPivotSpeed > 0) {
+        if (m_climber.getRearForwardSensor() && commandedRearPivotSpeed < 0) {
           m_climber.setRearPivotMotorSpeed(0);
-        } else if (m_climber.getRearBackSensor() && commandedRearPivotSpeed < 0) {
+        } else if (m_climber.getRearBackSensor() && commandedRearPivotSpeed > 0) {
           m_climber.setRearPivotMotorSpeed(0);
         } else {
           m_climber.setRearPivotMotorSpeed(commandedRearPivotSpeed);
@@ -180,33 +180,29 @@ public class RobotContainer {
       }
 
       if (m_lighting.getLightingState() == LightingState.Idle) {
-        m_lighting.rainbow();
+        m_lighting.setLEDColor(255, 0, 0);
       } else if (m_lighting.getLightingState() == LightingState.Active) {
         if (m_cargoHandler.getQueue1Sensor() && !m_cargoHandler.getQueue2Sensor()
             || !m_cargoHandler.getQueue1Sensor() && m_cargoHandler.getQueue2Sensor()) {
-          m_lighting.setLEDColor(255, 255, 0);
-        } else if (m_cargoHandler.getQueue1Sensor() && m_cargoHandler.getQueue2Sensor()) {
           m_lighting.setLEDColor(0, 0, 255);
+        } else if (m_cargoHandler.getQueue1Sensor() && m_cargoHandler.getQueue2Sensor()) {
+          m_lighting.setLEDColor(255, 0, 0);
         } else if (!m_cargoHandler.getQueue1Sensor() && !m_cargoHandler.getQueue2Sensor()) {
           m_lighting.setLEDColor(0, 0, 0);
+        } else {
+          m_lighting.setLEDColor(255, 255, 255);
         }
       } else if (m_lighting.getLightingState() == LightingState.Shooting) {
         if (m_shooter.upToSpeed()) {
-          m_lighting.setLEDColor(0, 255, 0);
-        } else {
           m_lighting.setLEDColor(244, 127, 5);
+        } else {
+          m_lighting.setLEDColor(0, 255, 0);
         }
       } else if (m_lighting.getLightingState() == LightingState.ESTOP) {
         m_lighting.setLEDColor(255, 0, 0);
       }
     }, m_lighting));
 
-
-    // Auto mode selector
-    m_chooser.setDefaultOption("Default Leave Tarmac", new AutoLeaveTarmac(m_drive));
-    m_chooser.addOption("2 Ball Auto", new Auto2Ball(m_drive, m_cargoHandler, m_shooter));
-    m_chooser.addOption("4 Ball Auto", new Auto4Ball(m_drive, m_cargoHandler, m_shooter));
-    SmartDashboard.putData("Auto Modes", m_chooser);
 
   }
 
@@ -217,6 +213,7 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+
     // Drive state changers
     new JoystickButton(m_rightJoystick, OIConstants.kMechDrivePort).whenHeld(new RunCommand(() -> {
       m_drive.driveState(DriveState.MECANUM_DRIVE);
@@ -269,9 +266,9 @@ public class RobotContainer {
   public double getDesiredTurretSpeed() {
     double turretStickX = m_copilotDS.getRawAxis(OIConstants.kMiniJoystick1XPort);
     if (turretStickX < 0.03) {
-      return -0.5;
+      return -0.9;
     } else if (turretStickX > 0.07) {
-      return 0.5;
+      return 0.9;
     } else {
       return 0;
     }
@@ -284,21 +281,21 @@ public class RobotContainer {
 
     // If Shooter Knob is at 1
     if (knobValue < 0.024 - threshold) {
-      angle = ShooterConstants.kShooterHoodAngle2;
+      angle = ShooterConstants.kShooterHoodAngle1;
     }
     // If Shooter Knob is at 2
     else if (knobValue >= 0.024 - threshold && knobValue < 0.024 + threshold) {
-      angle = ShooterConstants.kShooterHoodAngle1;
+      angle = ShooterConstants.kShooterHoodAngle2;
     }
     // If Shooter Knob is at 3
     else if (knobValue >= 0.024 + threshold && knobValue < 0.055 + threshold) {
-      angle = ShooterConstants.kShooterHoodAngle2;
+      angle = ShooterConstants.kShooterHoodAngle3;
     }
     // If Shooter Knob is at 4
     else if (knobValue >= 0.055 + threshold) {
-      angle = ShooterConstants.kShooterHoodAngle3;
+      angle = ShooterConstants.kShooterHoodAngle4;
     } else {
-      angle = ShooterConstants.kShooterHoodAngle2;
+      angle = ShooterConstants.kShooterHoodAngle1;
     }
 
     return angle;
@@ -331,12 +328,12 @@ public class RobotContainer {
   }
 
   public double getDesiredFrontLiftSpeed() {
-    double ClimberStickY = m_copilotDS.getRawAxis(OIConstants.kMiniJoystick2YPort);
+    double ClimberStickY = m_copilotDS.getRawAxis(OIConstants.kMiniJoystick3XPort);
     SmartDashboard.putNumber("[Climber] Front Lift Y", ClimberStickY);
     if (ClimberStickY < 0.035) {
-      return -0.4;
+      return -1;
     } else if (ClimberStickY > 0.075) {
-      return 0.4;
+      return 1;
     } else {
       return 0;
     }
@@ -344,20 +341,20 @@ public class RobotContainer {
 
 
   public double getDesiredRearLiftSpeed() {
-    double ClimberStickY = m_copilotDS.getRawAxis(OIConstants.kMiniJoystick3YPort);
+    double ClimberStickY = m_copilotDS.getRawAxis(OIConstants.kMiniJoystick2YPort);
     SmartDashboard.putNumber("[Climber] Rear Lift Y", ClimberStickY);
     if (ClimberStickY < 0.035) {
-      return -0.4;
+      return -1;
     } else if (ClimberStickY > 0.075) {
-      return 0.4;
+      return 1;
     } else {
       return 0;
     }
   }
 
   public double getDesiredRearPivotSpeed() {
-    double ClimberStickY = m_copilotDS.getRawAxis(OIConstants.kMiniJoystick1YPort);
-    SmartDashboard.putNumber("[Climber] Front pivot Y", ClimberStickY);
+    double ClimberStickY = m_copilotDS.getRawAxis(OIConstants.kMiniJoystick1XPort);
+    SmartDashboard.putNumber("[Climber] pivot Y", ClimberStickY);
     if (ClimberStickY < 0.035) {
       return -0.4;
     } else if (ClimberStickY > 0.075) {
@@ -374,6 +371,13 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_chooser.getSelected();
+
+    if (m_copilotDS.getRawButton(OIConstants.kAutoMode1Port)) {
+      m_autoCommand = new Auto2Ball(m_drive, m_cargoHandler, m_shooter);
+    } else if (m_copilotDS.getRawButton(OIConstants.kAutoMode2Port)) {
+      m_autoCommand = new Auto4Ball(m_drive, m_cargoHandler, m_shooter);
+    }
+
+    return m_autoCommand;
   }
 }

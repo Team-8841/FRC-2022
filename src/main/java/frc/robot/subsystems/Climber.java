@@ -55,11 +55,11 @@ public class Climber extends SubsystemBase {
     }
 
     public boolean getRearForwardSensor() {
-        return m_rearForwardLimit.get();
+        return !m_rearForwardLimit.get();
     }
 
     public boolean getRearBackSensor() {
-        return m_rearBackLimit.get();
+        return !m_rearBackLimit.get();
     }
 
     public boolean getRearTopSensor() {
@@ -95,6 +95,8 @@ public class Climber extends SubsystemBase {
         SmartDashboard.putBoolean("[Climber]: Rear Back Limit", getRearBackSensor());
         SmartDashboard.putBoolean("[Climber]: Rear Top Limit", getRearTopSensor());
         SmartDashboard.putBoolean("[Climber]: Rear Bottom Limit", getRearBottomSensor());
+
+
     }
 
 }

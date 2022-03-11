@@ -80,10 +80,10 @@ public class Vision extends SubsystemBase {
 
     public void updateStatus() {
         SmartDashboard.putNumber("[Vision] Valid Target", isTargetValid());
-        SmartDashboard.putNumber("[Vision] Target Horizontal Offset", tx.getDouble(0.0));
-        SmartDashboard.putNumber("[Vision] Target Vertical Offset", ty.getDouble(0.0));
-        SmartDashboard.putNumber("[Vision] Target Area", getTargetArea());
-        SmartDashboard.putNumber("[Vision] Distance", getDistance());
+        // SmartDashboard.putNumber("[Vision] Target Horizontal Offset", tx.getDouble(0.0));
+        // SmartDashboard.putNumber("[Vision] Target Vertical Offset", ty.getDouble(0.0));
+        // SmartDashboard.putNumber("[Vision] Target Area", getTargetArea());
+        // SmartDashboard.putNumber("[Vision] Distance", getDistance());
     }
 
 }

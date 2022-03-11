@@ -78,7 +78,7 @@ public class CargoHandler extends SubsystemBase {
 
 
     public void sensorControl(boolean intakeIn, boolean intakeOut) {
-        double intakeSpeed = .5;
+        double intakeSpeed = .7;
         double queue1Speed = .4;
         double queue2Speed = .3;
 
@@ -108,9 +108,10 @@ public class CargoHandler extends SubsystemBase {
             }
             // cargo in queue 1 and 2
             else if (getQueue1Sensor() & getQueue2Sensor()) {
-                setIntake(-intakeSpeed);
+                setIntake(0);
                 setQueue1(0);
                 setQueue2(0);
+                setIntakeSolenoid(false);
             }
         } else {
             setIntake(0);

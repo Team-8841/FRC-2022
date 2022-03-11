@@ -21,9 +21,9 @@ public class Auto2Ball extends SequentialCommandGroup {
                                 )
                         ),
                         new ParallelRaceGroup(
-                                new SetShooterSpeed(3300, .55, shooter),
+                                new SetShooterSpeed(3700, .39, shooter),
                                 new SequentialCommandGroup(
-                                        new WaitCommand(1),
+                                        new WaitCommand(2),
                                         new Shoot(cargoHandler)
                                 )
                         ),

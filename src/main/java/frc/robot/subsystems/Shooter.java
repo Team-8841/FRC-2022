@@ -45,14 +45,12 @@ public class Shooter extends SubsystemBase {
         m_pidController.setOutputRange(ShooterConstants.kMinOutput, ShooterConstants.kMaxOutput);
 
         // display PID coefficients on SmartDashboard
-        SmartDashboard.putNumber("[Shooter] P Gain", ShooterConstants.kP);
-        SmartDashboard.putNumber("[Shooter] I Gain", ShooterConstants.kI);
-        SmartDashboard.putNumber("[Shooter] D Gain", ShooterConstants.kD);
-        SmartDashboard.putNumber("[Shooter] I Zone", ShooterConstants.kIZone);
-        SmartDashboard.putNumber("[Shooter] Feed Forward", ShooterConstants.kFF);
-        SmartDashboard.putNumber("[Shooter] Setpoint", 0);
-        SmartDashboard.putNumber("[Shooter] Tune Hood Value(0-1)",
-                ShooterConstants.kDefaultHoodAngle);
+        // SmartDashboard.putNumber("[Shooter] P Gain", ShooterConstants.kP);
+        // SmartDashboard.putNumber("[Shooter] I Gain", ShooterConstants.kI);
+        // SmartDashboard.putNumber("[Shooter] D Gain", ShooterConstants.kD);
+        // SmartDashboard.putNumber("[Shooter] I Zone", ShooterConstants.kIZone);
+        // SmartDashboard.putNumber("[Shooter] Feed Forward", ShooterConstants.kFF);
+        // SmartDashboard.putNumber("[Shooter] Setpoint", 0);
     }
 
 
@@ -90,8 +88,6 @@ public class Shooter extends SubsystemBase {
         double iZone = SmartDashboard.getNumber("[Shooter] I Zone", ShooterConstants.kIZone);
         double ff = SmartDashboard.getNumber("[Shooter] Feed Forward", ShooterConstants.kFF);
         double setpoint = SmartDashboard.getNumber("[Shooter] Setpoint", 0);
-        double hoodAngle = SmartDashboard.getNumber("[Shooter] Tune Hood Value(0-1)",
-                ShooterConstants.kDefaultHoodAngle);
 
         // if PID coefficients on SmartDashboard have changed, write new values to controller
         if ((p != m_kP)) {
@@ -118,16 +114,12 @@ public class Shooter extends SubsystemBase {
             m_pidController.setReference(setpoint, ControlType.kVelocity);
             m_setPoint = setpoint;
         }
-        if ((hoodAngle != m_setHoodAngle)) {
-            setHoodAngle(hoodAngle);
-            m_setHoodAngle = hoodAngle;
-        }
 
     }
 
     public void updateStatus() {
         SmartDashboard.putNumber("[Shooter] Velocity", m_encoder.getVelocity());
-        SmartDashboard.putNumber("[Shooter] Hood Angle", m_hoodServo1.get());
+        // SmartDashboard.putNumber("[Shooter] Hood Angle", m_hoodServo1.get());
         SmartDashboard.putBoolean("[Shooter] At Speed", upToSpeed());
     }
 }
