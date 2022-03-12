@@ -55,8 +55,8 @@ public final class Constants {
                 public static final int kCurrentLimit = 80; // May need to tune
 
                 public static final int kEncoderCPR = 42; // NEO encoder 42 CPR
-                public static final double kP = 0.000230; // 0.000230; 0.000630
-                public static final double kI = 0.000001; // 0.000001;
+                public static final double kP = 0.000240; // 0.000240; old - 0.000230
+                public static final double kI = 0.0000001; // 0.0000001; old - 0.000001
                 public static final double kD = 0;
                 public static final double kIZone = 330; // 330;
                 public static final double kFF = 0.000165; // 0.000165;
@@ -67,7 +67,7 @@ public final class Constants {
                 public static final double kShooterSpeed1 = 3700;
                 public static final double kShooterSpeed2 = 4350;
                 public static final double kShooterSpeed3 = 4500;
-                public static final double kShooterSpeed4 = 4700;
+                public static final double kShooterSpeed4 = 3900;
 
                 public static final double kShooterHoodAngle1 = 0.55;// TODO: Tune Tarmac
                 public static final double kShooterHoodAngle2 = 0.39;// TODO: Tune Line

@@ -132,17 +132,17 @@ public class RobotContainer {
         double commandedRearLiftSpeed = getDesiredRearLiftSpeed();
         double commandedRearPivotSpeed = getDesiredRearPivotSpeed();
 
-        if (m_climber.getFrontTopSensor() && commandedFrontLiftSpeed > 0) {
+        if (m_climber.getFrontTopSensor() && commandedFrontLiftSpeed < 0) {
           m_climber.setFrontLiftMotorSpeed(0);
-        } else if (m_climber.getFrontBottomSensor() && commandedFrontLiftSpeed < 0) {
+        } else if (m_climber.getFrontBottomSensor() && commandedFrontLiftSpeed > 0) {
           m_climber.setFrontLiftMotorSpeed(0);
         } else {
           m_climber.setFrontLiftMotorSpeed(commandedFrontLiftSpeed);
         }
 
-        if (m_climber.getRearTopSensor() && commandedRearLiftSpeed > 0) {
+        if (m_climber.getRearTopSensor() && commandedRearLiftSpeed < 0) {
           m_climber.setRearLiftMotorSpeed(0);
-        } else if (m_climber.getRearBottomSensor() && commandedRearLiftSpeed < 0) {
+        } else if (m_climber.getRearBottomSensor() && commandedRearLiftSpeed > 0) {
           m_climber.setRearLiftMotorSpeed(0);
         } else {
           m_climber.setRearLiftMotorSpeed(commandedRearLiftSpeed);

@@ -108,10 +108,10 @@ public class CargoHandler extends SubsystemBase {
             }
             // cargo in queue 1 and 2
             else if (getQueue1Sensor() & getQueue2Sensor()) {
-                setIntake(0);
+                setIntake(-intakeSpeed);
                 setQueue1(0);
                 setQueue2(0);
-                setIntakeSolenoid(false);
+                // setIntakeSolenoid(false);
             }
         } else {
             setIntake(0);
