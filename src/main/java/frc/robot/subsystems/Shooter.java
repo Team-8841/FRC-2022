@@ -75,6 +75,10 @@ public class Shooter extends SubsystemBase {
         m_hoodServo2.set(angle);
     }
 
+    public double getHoodAngle() {
+        return m_hoodServo1.get();
+    }
+
     public boolean upToSpeed() {
         double curVel = m_encoder.getVelocity();
         return curVel > m_setPoint - ShooterConstants.kAllowedError;

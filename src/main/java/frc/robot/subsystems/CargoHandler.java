@@ -78,7 +78,7 @@ public class CargoHandler extends SubsystemBase {
 
 
     public void sensorControl(boolean intakeIn, boolean intakeOut) {
-        double intakeSpeed = .7;
+        double intakeSpeed = .9;
         double queue1Speed = .4;
         double queue2Speed = .3;
 

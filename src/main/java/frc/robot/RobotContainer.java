@@ -83,8 +83,13 @@ public class RobotContainer {
     // Default Shooter command
     m_shooter.setDefaultCommand(new RunCommand(() -> {
       // m_shooter.tune(); // TODO: comment this out after tuning shooter
-      m_shooter.setSetpoint(getDesiredShooterSpeed());
-      m_shooter.setHoodAngle(getDesiredShooterHoodAngle());
+      m_shooter.setSetpoint(getShooterAndHood()[0]);
+      m_shooter.setHoodAngle(getShooterAndHood()[1]);
+
+      // Kill compressor if we are shooting
+      if (getShooterAndHood()[0] > 0) {
+        m_compressor.disable();
+      }
 
     }, m_shooter));
 
@@ -170,7 +175,7 @@ public class RobotContainer {
       if (RobotState.isDisabled()) {
         m_lighting.setLightingState(LightingState.Idle);
       } else if (RobotState.isEnabled()) {
-        if (getDesiredShooterSpeed() > 0) {
+        if (getShooterAndHood()[0] > 0) {
           m_lighting.setLightingState(LightingState.Shooting);
         } else {
           m_lighting.setLightingState(LightingState.Active);
@@ -193,7 +198,7 @@ public class RobotContainer {
           m_lighting.setLEDColor(255, 255, 255);
         }
       } else if (m_lighting.getLightingState() == LightingState.Shooting) {
-        if (m_shooter.upToSpeed()) {
+        if (m_shooter.upToSpeed() && m_shooter.getHoodAngle() == getShooterAndHood()[1]) {
           m_lighting.setLEDColor(244, 127, 5);
         } else {
           m_lighting.setLEDColor(0, 255, 0);
@@ -252,7 +257,7 @@ public class RobotContainer {
         m_cargoHandler.setIntake(0);
       }
 
-      if (getDesiredShooterSpeed() > 100) {
+      if (getShooterAndHood()[0] > 100) {
         m_cargoHandler.setQueue2(.6);
         m_cargoHandler.setQueue1(.4);
       } else {
@@ -261,6 +266,40 @@ public class RobotContainer {
       }
     }, m_cargoHandler));
 
+  }
+
+  // [0] == Speed [1] == hood angle
+  public double[] getShooterAndHood() {
+    double angle;
+    double speed;
+    double knobValue = m_copilotDS.getRawAxis(5);
+    double threshold = 0.010;
+
+    // If Shooter Knob is at 1
+    if (knobValue < 0.024 - threshold) {
+      angle = ShooterConstants.kShooterHoodAngle1;
+      speed = 0.0;
+    }
+    // If Shooter Knob is at 2
+    else if (knobValue >= 0.024 - threshold && knobValue < 0.024 + threshold) {
+      angle = ShooterConstants.kShooterHoodAngle1;
+      speed = ShooterConstants.kShooterSpeed1;
+    }
+    // If Shooter Knob is at 3
+    else if (knobValue >= 0.024 + threshold && knobValue < 0.055 + threshold) {
+      angle = ShooterConstants.kShooterHoodAngle2;
+      speed = ShooterConstants.kShooterSpeed2;
+    }
+    // If Shooter Knob is at 4
+    else if (knobValue >= 0.055 + threshold) {
+      angle = ShooterConstants.kShooterHoodAngle3;
+      speed = ShooterConstants.kShooterSpeed3;
+    } else {
+      angle = ShooterConstants.kShooterHoodAngle1;
+      speed = 0;
+    }
+
+    return new double[] {speed, angle};
   }
 
   public double getDesiredTurretSpeed() {
@@ -272,59 +311,6 @@ public class RobotContainer {
     } else {
       return 0;
     }
-  }
-
-  public double getDesiredShooterHoodAngle() {
-    double angle;
-    double knobValue = m_copilotDS.getRawAxis(5);
-    double threshold = 0.010;
-
-    // If Shooter Knob is at 1
-    if (knobValue < 0.024 - threshold) {
-      angle = ShooterConstants.kShooterHoodAngle1;
-    }
-    // If Shooter Knob is at 2
-    else if (knobValue >= 0.024 - threshold && knobValue < 0.024 + threshold) {
-      angle = ShooterConstants.kShooterHoodAngle2;
-    }
-    // If Shooter Knob is at 3
-    else if (knobValue >= 0.024 + threshold && knobValue < 0.055 + threshold) {
-      angle = ShooterConstants.kShooterHoodAngle3;
-    }
-    // If Shooter Knob is at 4
-    else if (knobValue >= 0.055 + threshold) {
-      angle = ShooterConstants.kShooterHoodAngle4;
-    } else {
-      angle = ShooterConstants.kShooterHoodAngle1;
-    }
-
-    return angle;
-  }
-
-  public double getDesiredShooterSpeed() {
-    double speed;
-    double knobValue = m_copilotDS.getRawAxis(4);
-    double threshold = 0.010;
-
-    // If Shooter Knob is at 1
-    if (knobValue < 0.023 - threshold) {
-      speed = 0;
-    } // If Shooter Knob is at 2
-    else if (knobValue >= 0.023 - threshold && knobValue < 0.047 + threshold) {
-      speed = ShooterConstants.kShooterSpeed1;
-    } // If Shooter Knob is at 3
-    else if (knobValue >= 0.047 + threshold && knobValue < 0.070 + threshold) {
-      speed = ShooterConstants.kShooterSpeed2;
-    } // If Shooter Knob is at 4
-    else if (knobValue >= 0.070 + threshold && knobValue < 0.094 + threshold) {
-      speed = ShooterConstants.kShooterSpeed3;
-    } else if (knobValue >= 0.095 + threshold) {
-      speed = ShooterConstants.kShooterSpeed4;
-    } else {
-      speed = 0;
-    }
-
-    return speed;
   }
 
   public double getDesiredFrontLiftSpeed() {
