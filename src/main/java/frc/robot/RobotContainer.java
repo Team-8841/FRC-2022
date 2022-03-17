@@ -137,9 +137,9 @@ public class RobotContainer {
         double commandedRearLiftSpeed = getDesiredRearLiftSpeed();
         double commandedRearPivotSpeed = getDesiredRearPivotSpeed();
 
-        if (m_climber.getFrontTopSensor() && commandedFrontLiftSpeed < 0) {
+        if (m_climber.getFrontTopSensor() && commandedFrontLiftSpeed > 0) {
           m_climber.setFrontLiftMotorSpeed(0);
-        } else if (m_climber.getFrontBottomSensor() && commandedFrontLiftSpeed > 0) {
+        } else if (m_climber.getFrontBottomSensor() && commandedFrontLiftSpeed < 0) {
           m_climber.setFrontLiftMotorSpeed(0);
         } else {
           m_climber.setFrontLiftMotorSpeed(commandedFrontLiftSpeed);
@@ -305,9 +305,9 @@ public class RobotContainer {
   public double getDesiredTurretSpeed() {
     double turretStickX = m_copilotDS.getRawAxis(OIConstants.kMiniJoystick1XPort);
     if (turretStickX < 0.03) {
-      return -0.9;
+      return -0.7;
     } else if (turretStickX > 0.07) {
-      return 0.9;
+      return 0.7;
     } else {
       return 0;
     }
@@ -317,9 +317,9 @@ public class RobotContainer {
     double ClimberStickY = m_copilotDS.getRawAxis(OIConstants.kMiniJoystick3XPort);
     SmartDashboard.putNumber("[Climber] Front Lift Y", ClimberStickY);
     if (ClimberStickY < 0.035) {
-      return -1;
-    } else if (ClimberStickY > 0.075) {
       return 1;
+    } else if (ClimberStickY > 0.075) {
+      return -1;
     } else {
       return 0;
     }

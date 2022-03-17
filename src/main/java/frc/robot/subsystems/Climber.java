@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -10,8 +11,8 @@ import frc.robot.Constants.ClimberConstants;
 
 public class Climber extends SubsystemBase {
 
-    private final VictorSPX m_frontLiftMotor = new VictorSPX(ClimberConstants.kFrontLiftMotorPort);
-    private final VictorSPX m_rearLiftMotor = new VictorSPX(ClimberConstants.kRearLiftMotorPort);
+    private final TalonSRX m_frontLiftMotor = new TalonSRX(ClimberConstants.kFrontLiftMotorPort);
+    private final TalonSRX m_rearLiftMotor = new TalonSRX(ClimberConstants.kRearLiftMotorPort);
     private final VictorSPX m_rearPivorMotor = new VictorSPX(ClimberConstants.kRearPivotMotorPort);
 
     private final DigitalInput m_frontTopLimit =
@@ -31,8 +32,8 @@ public class Climber extends SubsystemBase {
 
 
     public Climber() {
-        configureVictor(m_frontLiftMotor);
-        configureVictor(m_rearLiftMotor);
+        configureTalon(m_frontLiftMotor);
+        configureTalon(m_rearLiftMotor);
         configureVictor(m_rearPivorMotor);
 
         m_frontLiftMotor.setInverted(false);
@@ -43,6 +44,10 @@ public class Climber extends SubsystemBase {
 
     private void configureVictor(VictorSPX victor) {
         victor.setNeutralMode(NeutralMode.Brake);
+    }
+
+    private void configureTalon(TalonSRX talon) {
+        talon.setNeutralMode(NeutralMode.Brake);
     }
 
 

@@ -82,42 +82,42 @@ public class CargoHandler extends SubsystemBase {
         double queue1Speed = .4;
         double queue2Speed = .3;
 
-        // if (getIntakeSolenoidDown()) {
-        if (intakeOut) {
-            setIntake(-intakeSpeed);
-            setQueue1(-queue1Speed);
-            setQueue2(-queue2Speed);
-        } else if (intakeIn) {
-            // No cargo
-            if (!getQueue1Sensor() & !getQueue2Sensor()) {
-                setIntake(intakeSpeed);
-                setQueue1(queue1Speed);
-                setQueue2(queue2Speed);
-            }
-            // cargo in queue 1
-            else if (getQueue1Sensor() & !getQueue2Sensor()) {
-                setIntake(intakeSpeed);
-                setQueue1(queue1Speed);
-                setQueue2(queue2Speed);
-            }
-            // cargo in queue 2
-            else if (!getQueue1Sensor() & getQueue2Sensor()) {
-                setIntake(intakeSpeed);
-                setQueue1(queue1Speed);
-                setQueue2(0);
-            }
-            // cargo in queue 1 and 2
-            else if (getQueue1Sensor() & getQueue2Sensor()) {
+        if (getIntakeSolenoidDown()) {
+            if (intakeOut) {
                 setIntake(-intakeSpeed);
+                setQueue1(-queue1Speed);
+                setQueue2(-queue2Speed);
+            } else if (intakeIn) {
+                // No cargo
+                if (!getQueue1Sensor() & !getQueue2Sensor()) {
+                    setIntake(intakeSpeed);
+                    setQueue1(queue1Speed);
+                    setQueue2(queue2Speed);
+                }
+                // cargo in queue 1
+                else if (getQueue1Sensor() & !getQueue2Sensor()) {
+                    setIntake(intakeSpeed);
+                    setQueue1(queue1Speed);
+                    setQueue2(queue2Speed);
+                }
+                // cargo in queue 2
+                else if (!getQueue1Sensor() & getQueue2Sensor()) {
+                    setIntake(intakeSpeed);
+                    setQueue1(queue1Speed);
+                    setQueue2(0);
+                }
+                // cargo in queue 1 and 2
+                else if (getQueue1Sensor() & getQueue2Sensor()) {
+                    setIntake(-intakeSpeed);
+                    setQueue1(0);
+                    setQueue2(0);
+                    // setIntakeSolenoid(false);
+                }
+            } else {
+                setIntake(0);
                 setQueue1(0);
                 setQueue2(0);
-                // setIntakeSolenoid(false);
             }
-        } else {
-            setIntake(0);
-            setQueue1(0);
-            setQueue2(0);
         }
-        // }
     }
 }

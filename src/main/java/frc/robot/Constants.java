@@ -135,7 +135,7 @@ public final class Constants {
                 public static final int kIntakeInPort = 4;
                 public static final int kIntakeOutPort = 5;
                 public static final int kClimberSwitchPort = 9;
-                public static final int kIntakeSolenoidPort = 12;
+                public static final int kIntakeSolenoidPort = 13;
                 public static final int kAutoMode1Port = 8;
                 public static final int kAutoMode2Port = 6;
 
