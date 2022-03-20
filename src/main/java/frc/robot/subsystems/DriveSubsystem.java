@@ -55,10 +55,10 @@ public class DriveSubsystem extends SubsystemBase {
   public DriveSubsystem() {
 
     // Configure The motor controllers
-    configureSpark(m_leftFrontMotor);
-    configureSpark(m_leftBackMotor);
-    configureSpark(m_rightFrontMotor);
-    configureSpark(m_rightBackMotor);
+    configureSparkCoast(m_leftFrontMotor);
+    configureSparkBreak(m_leftBackMotor);
+    configureSparkCoast(m_rightFrontMotor);
+    configureSparkBreak(m_rightBackMotor);
     m_drive.setMaxOutput(1); // TODO: Tune max speed
 
     m_encoder = m_leftFrontMotor.getEncoder();
@@ -75,11 +75,18 @@ public class DriveSubsystem extends SubsystemBase {
 
   }
 
-  private void configureSpark(CANSparkMax sparkMax) {
+  private void configureSparkCoast(CANSparkMax sparkMax) {
     sparkMax.restoreFactoryDefaults();
     sparkMax.setOpenLoopRampRate(DriveConstants.kDTRampRate);
     sparkMax.setSmartCurrentLimit(DriveConstants.kCurrentLimit);
     sparkMax.setIdleMode(CANSparkMax.IdleMode.kCoast);
+  }
+
+  private void configureSparkBreak(CANSparkMax sparkMax) {
+    sparkMax.restoreFactoryDefaults();
+    sparkMax.setOpenLoopRampRate(DriveConstants.kDTRampRate);
+    sparkMax.setSmartCurrentLimit(DriveConstants.kCurrentLimit);
+    sparkMax.setIdleMode(CANSparkMax.IdleMode.kBrake);
   }
 
   @Override

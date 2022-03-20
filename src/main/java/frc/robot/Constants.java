@@ -64,12 +64,12 @@ public final class Constants {
                 public static final double kMinOutput = 0;
                 public static final double kAllowedError = 200; // TODO: Tune
 
-                public static final double kShooterSpeed1 = 3550; // 3700 Tarmac
+                public static final double kShooterSpeed1 = 3500; // 3700 Tarmac
                 public static final double kShooterSpeed2 = 3800; // 4350 Line
                 public static final double kShooterSpeed3 = 4350; // 4500 Safe
                 public static final double kShooterSpeed4 = 4350; // 3900
 
-                public static final double kShooterHoodAngle1 = 0.53;// TODO: Tune Tarmac .55
+                public static final double kShooterHoodAngle1 = 0.45;// TODO: Tune Tarmac .55
                 public static final double kShooterHoodAngle2 = 0.39;// TODO: Tune Line .39
                 public static final double kShooterHoodAngle3 = 0.2;// TODO: Tune Safe .3
                 public static final double kShooterHoodAngle4 = 0.2;// TODO: Tune SURE .27

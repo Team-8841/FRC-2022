@@ -38,7 +38,7 @@ public class Climber extends SubsystemBase {
 
         m_frontLiftMotor.setInverted(false);
         m_rearLiftMotor.setInverted(false);
-        m_rearPivorMotor.setInverted(false);
+        m_rearPivorMotor.setInverted(true);
     }
 
 

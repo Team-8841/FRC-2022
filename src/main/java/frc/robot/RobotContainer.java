@@ -185,23 +185,21 @@ public class RobotContainer {
       }
 
       if (m_lighting.getLightingState() == LightingState.Idle) {
-        m_lighting.setLEDColor(255, 0, 0);
+        m_lighting.setLEDColor(255, 0, 255);
       } else if (m_lighting.getLightingState() == LightingState.Active) {
         if (m_cargoHandler.getQueue1Sensor() && !m_cargoHandler.getQueue2Sensor()
             || !m_cargoHandler.getQueue1Sensor() && m_cargoHandler.getQueue2Sensor()) {
           m_lighting.setLEDColor(0, 0, 255);
         } else if (m_cargoHandler.getQueue1Sensor() && m_cargoHandler.getQueue2Sensor()) {
-          m_lighting.setLEDColor(255, 0, 0);
+          m_lighting.setLEDColor(0, 255, 0);
         } else if (!m_cargoHandler.getQueue1Sensor() && !m_cargoHandler.getQueue2Sensor()) {
           m_lighting.setLEDColor(0, 0, 0);
         } else {
-          m_lighting.setLEDColor(255, 255, 255);
+          m_lighting.setLEDColor(0, 0, 0);
         }
       } else if (m_lighting.getLightingState() == LightingState.Shooting) {
         if (m_shooter.upToSpeed() && m_shooter.getHoodAngle() == getShooterAndHood()[1]) {
-          m_lighting.setLEDColor(244, 127, 5);
-        } else {
-          m_lighting.setLEDColor(0, 255, 0);
+          m_lighting.setLEDColor(255, 255, 255);
         }
       } else if (m_lighting.getLightingState() == LightingState.ESTOP) {
         m_lighting.setLEDColor(255, 0, 0);
@@ -277,7 +275,7 @@ public class RobotContainer {
 
     // If Shooter Knob is at 1
     if (knobValue < 0.024 - threshold) {
-      angle = ShooterConstants.kShooterHoodAngle1;
+      angle = 0.35;
       speed = 0.0;
     }
     // If Shooter Knob is at 2

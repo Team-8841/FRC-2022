@@ -118,6 +118,10 @@ public class CargoHandler extends SubsystemBase {
                 setQueue1(0);
                 setQueue2(0);
             }
+        } else {
+            setIntake(0);
+            setQueue1(0);
+            setQueue2(0);
         }
     }
 }
