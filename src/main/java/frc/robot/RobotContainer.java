@@ -86,11 +86,6 @@ public class RobotContainer {
       m_shooter.setSetpoint(getShooterAndHood()[0]);
       m_shooter.setHoodAngle(getShooterAndHood()[1]);
 
-      // Kill compressor if we are shooting
-      if (getShooterAndHood()[0] > 0) {
-        m_compressor.disable();
-      }
-
     }, m_shooter));
 
     // Default Turret command
@@ -134,36 +129,21 @@ public class RobotContainer {
       if (m_copilotDS.getRawButton(OIConstants.kClimbModeSwitchPort)) {
 
         double commandedFrontLiftSpeed = getDesiredFrontLiftSpeed();
-        double commandedRearLiftSpeed = getDesiredRearLiftSpeed();
-        double commandedRearPivotSpeed = getDesiredRearPivotSpeed();
 
-        if (m_climber.getFrontTopSensor() && commandedFrontLiftSpeed > 0) {
-          m_climber.setFrontLiftMotorSpeed(0);
-        } else if (m_climber.getFrontBottomSensor() && commandedFrontLiftSpeed < 0) {
-          m_climber.setFrontLiftMotorSpeed(0);
+        if (m_climber.getTopLimit() && commandedFrontLiftSpeed < 0) {
+          m_climber.setLiftSpeed(0);
+        } else if (m_climber.getBottomLimit() && commandedFrontLiftSpeed > 0) {
+          m_climber.setLiftSpeed(0);
         } else {
-          m_climber.setFrontLiftMotorSpeed(commandedFrontLiftSpeed);
+          m_climber.setLiftSpeed(commandedFrontLiftSpeed);
         }
 
-        if (m_climber.getRearTopSensor() && commandedRearLiftSpeed < 0) {
-          m_climber.setRearLiftMotorSpeed(0);
-        } else if (m_climber.getRearBottomSensor() && commandedRearLiftSpeed > 0) {
-          m_climber.setRearLiftMotorSpeed(0);
+        if (m_copilotDS.getRawButton(12)) {
+          m_climber.setHangSoleniod(true);
         } else {
-          m_climber.setRearLiftMotorSpeed(commandedRearLiftSpeed);
+          m_climber.setHangSoleniod(false);
         }
 
-        if (m_climber.getRearForwardSensor() && commandedRearPivotSpeed < 0) {
-          m_climber.setRearPivotMotorSpeed(0);
-        } else if (m_climber.getRearBackSensor() && commandedRearPivotSpeed > 0) {
-          m_climber.setRearPivotMotorSpeed(0);
-        } else {
-          m_climber.setRearPivotMotorSpeed(commandedRearPivotSpeed);
-        }
-      } else {
-        m_climber.setFrontLiftMotorSpeed(0);
-        m_climber.setRearLiftMotorSpeed(0);
-        m_climber.setRearPivotMotorSpeed(0);
       }
     }, m_climber));
 
@@ -198,8 +178,11 @@ public class RobotContainer {
           m_lighting.setLEDColor(0, 0, 0);
         }
       } else if (m_lighting.getLightingState() == LightingState.Shooting) {
+
         if (m_shooter.upToSpeed() && m_shooter.getHoodAngle() == getShooterAndHood()[1]) {
           m_lighting.setLEDColor(255, 255, 255);
+        } else {
+          m_lighting.setLEDColor(0, 0, 0);
         }
       } else if (m_lighting.getLightingState() == LightingState.ESTOP) {
         m_lighting.setLEDColor(255, 0, 0);
@@ -236,7 +219,13 @@ public class RobotContainer {
         }));
     new JoystickButton(m_copilotDS, OIConstants.kCompressorSwitchPort)
         .whenReleased(new RunCommand(() -> {
-          m_compressor.enableDigital();
+
+          // Kill compressor if we are shooting
+          if (getShooterAndHood()[0] > 0) {
+            m_compressor.disable();
+          } else {
+            m_compressor.enableDigital();
+          }
           SmartDashboard.putBoolean("Compressor pressure switch",
               m_compressor.getPressureSwitchValue());
         }));
@@ -270,12 +259,12 @@ public class RobotContainer {
   public double[] getShooterAndHood() {
     double angle;
     double speed;
-    double knobValue = m_copilotDS.getRawAxis(5);
+    double knobValue = m_copilotDS.getRawAxis(4); // axis #5 for old knob
     double threshold = 0.010;
 
     // If Shooter Knob is at 1
     if (knobValue < 0.024 - threshold) {
-      angle = 0.35;
+      angle = 0.75;
       speed = 0.0;
     }
     // If Shooter Knob is at 2
@@ -284,28 +273,36 @@ public class RobotContainer {
       speed = ShooterConstants.kShooterSpeed1;
     }
     // If Shooter Knob is at 3
-    else if (knobValue >= 0.024 + threshold && knobValue < 0.055 + threshold) {
+    else if (knobValue >= 0.047 - threshold && knobValue < 0.047 + threshold) {
       angle = ShooterConstants.kShooterHoodAngle2;
       speed = ShooterConstants.kShooterSpeed2;
-    }
-    // If Shooter Knob is at 4
-    else if (knobValue >= 0.055 + threshold) {
+    } else if (knobValue >= 0.071 - threshold && knobValue < 0.071 + threshold) {
       angle = ShooterConstants.kShooterHoodAngle3;
       speed = ShooterConstants.kShooterSpeed3;
+    } else if (knobValue >= 0.094 - threshold && knobValue < 0.094 + threshold) {
+      angle = ShooterConstants.kShooterHoodAngle4;
+      speed = ShooterConstants.kShooterSpeed4;
+    }
+    // If Shooter Knob is at 4
+    else if (knobValue >= 0.094 + threshold) {
+      angle = ShooterConstants.kShooterHoodAngle5;
+      speed = ShooterConstants.kShooterSpeed5;
     } else {
       angle = ShooterConstants.kShooterHoodAngle1;
       speed = 0;
     }
-
+    SmartDashboard.putNumber("RPM: ", speed);
+    SmartDashboard.putNumber("Angle: ", angle);
     return new double[] {speed, angle};
+    // use this to read knob values & not turn on motor- return new double[] {0, .75};
   }
 
   public double getDesiredTurretSpeed() {
     double turretStickX = m_copilotDS.getRawAxis(OIConstants.kMiniJoystick1XPort);
     if (turretStickX < 0.03) {
-      return -0.7;
+      return -0.9;
     } else if (turretStickX > 0.07) {
-      return 0.7;
+      return 0.9;
     } else {
       return 0;
     }
@@ -315,9 +312,9 @@ public class RobotContainer {
     double ClimberStickY = m_copilotDS.getRawAxis(OIConstants.kMiniJoystick3XPort);
     SmartDashboard.putNumber("[Climber] Front Lift Y", ClimberStickY);
     if (ClimberStickY < 0.035) {
-      return 1;
-    } else if (ClimberStickY > 0.075) {
       return -1;
+    } else if (ClimberStickY > 0.075) {
+      return 1;
     } else {
       return 0;
     }
