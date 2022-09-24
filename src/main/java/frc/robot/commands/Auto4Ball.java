@@ -36,7 +36,7 @@ public class Auto4Ball extends SequentialCommandGroup {
                                         new IntakeInAndOut(true, true, cargoHandler),
                                         new SequentialCommandGroup(
                                                 new DriveToDistance(59, .55, drive),
-                                                new DriveToDistance(7, .25, drive),
+                                                new DriveToDistance(7, .30, drive),
                                                 new WaitCommand(.5),
                                                 new DriveToDistance(-78, .6, drive)
                                         )

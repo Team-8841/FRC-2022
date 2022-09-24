@@ -38,10 +38,9 @@ public final class Constants {
                                 ((kWheelDiameterInches * Math.PI) / (double) kEncoderCPR)
                                                 * kWheelGearRatio;
 
-                public static final double kStrightDriveP = 0.1; // These PID values may not be
-                                                                 // needed
+                public static final double kStrightDriveP = 0.05;
                 public static final double kStrightDriveI = 0;
-                public static final double kStrightDriveD = 0.005;
+                public static final double kStrightDriveD = 0.007;
 
         }
 
@@ -123,9 +122,12 @@ public final class Constants {
 
         public static final class OIConstants {
 
+                public static final String kControlMode = "gamepad"; // Options"gmaepad", "joystcks"
+
                 public static final int kLeftjoystickPort = 0; // DS port 0
                 public static final int kRightjoystickPort = 1; // DS port 1
                 public static final int kCopilotDsPort = 2; // DS port 2
+                public static final int kControllerPort = 3; // Gamepad
 
                 // right joystick inputs
                 public static final int kMechDrivePort = 2; // Thumb button

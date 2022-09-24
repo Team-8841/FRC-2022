@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -13,8 +14,10 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.TurretConstants;
@@ -23,7 +26,6 @@ import frc.robot.commands.Auto4Ball;
 import frc.robot.subsystems.CargoHandler;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.DriveSubsystem.DriveState;
 import frc.robot.subsystems.Lighting;
 import frc.robot.subsystems.Lighting.LightingState;
 import frc.robot.subsystems.Shooter;
@@ -52,9 +54,20 @@ public class RobotContainer {
 
   Command m_autoCommand;
 
-  private final Joystick m_leftJoystick = new Joystick(OIConstants.kLeftjoystickPort);
-  private final Joystick m_rightJoystick = new Joystick(OIConstants.kRightjoystickPort);
+  private static double m_driveStraightSetPoint = 0.0;
+
+
+  // private final Joystick m_leftJoystick = new Joystick(OIConstants.kLeftjoystickPort);
+  // private final Joystick m_rightJoystick = new Joystick(OIConstants.kRightjoystickPort);
+  private final XboxController m_pad = new XboxController(OIConstants.kControllerPort);
   private final Joystick m_copilotDS = new Joystick(OIConstants.kCopilotDsPort);
+
+
+  private final PIDCommand straightDriveCommand = new PIDCommand(
+      new PIDController(DriveConstants.kStrightDriveP, DriveConstants.kStrightDriveI,
+          DriveConstants.kStrightDriveD),
+      m_drive::getHeading, () -> m_driveStraightSetPoint,
+      output -> m_drive.arcadeDrive(-m_pad.getLeftY(), output), m_drive);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -66,8 +79,11 @@ public class RobotContainer {
     m_compressor.enableDigital();
     m_compressor.disable();
     // Default Drive command
-    m_drive.setDefaultCommand(new RunCommand(() -> m_drive.RobotDrive(m_leftJoystick.getY(),
-        -m_rightJoystick.getY(), m_rightJoystick.getX()), m_drive));
+    // m_drive.setDefaultCommand(new RunCommand(() -> m_drive.RobotDrive(m_leftJoystick.getY(),
+    // -m_rightJoystick.getY(), m_rightJoystick.getX()), m_drive));
+
+    m_drive.setDefaultCommand(new RunCommand(() -> m_drive.RobotDrive(m_pad.getLeftX(),
+        m_pad.getLeftY(), m_pad.getRightX(), m_pad.getRightY()), m_drive));
 
     // Default Vision command
     m_vision.setDefaultCommand(new RunCommand(() -> {
@@ -201,15 +217,16 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Drive state changers
-    new JoystickButton(m_rightJoystick, OIConstants.kMechDrivePort).whenHeld(new RunCommand(() -> {
-      m_drive.driveState(DriveState.MECANUM_DRIVE);
-      SmartDashboard.putString("[DT]Drive State", "MECANUM_DRIVE");
-    }));
-    new JoystickButton(m_rightJoystick, OIConstants.kMechDrivePort)
-        .whenReleased(new RunCommand(() -> {
-          m_drive.driveState(DriveState.TANK_DRIVE);
-          SmartDashboard.putString("[DT]Drive State", "TANK_DRIVE");
-        }));
+    /*
+     * new JoystickButton(m_rightJoystick, OIConstants.kMechDrivePort).whenHeld(new RunCommand(() ->
+     * { m_drive.driveState(DriveState.MECANUM_DRIVE); SmartDashboard.putString("[DT]Drive State",
+     * "MECANUM_DRIVE"); })); new JoystickButton(m_rightJoystick, OIConstants.kMechDrivePort)
+     * .whenReleased(new RunCommand(() -> { m_drive.driveState(DriveState.TANK_DRIVE);
+     * SmartDashboard.putString("[DT]Drive State", "TANK_DRIVE"); }));
+     */
+
+    new JoystickButton(m_pad, 5).whenHeld(straightDriveCommand
+        .beforeStarting(() -> m_driveStraightSetPoint = m_drive.getHeading(), m_drive));
 
     new JoystickButton(m_copilotDS, OIConstants.kCompressorSwitchPort)
         .whenHeld(new RunCommand(() -> {
@@ -230,8 +247,14 @@ public class RobotContainer {
               m_compressor.getPressureSwitchValue());
         }));
 
+    // Rest gyro maybe fix heading
+    new JoystickButton(m_pad, 7).whenHeld(new RunCommand(() -> {
+      m_drive.resetHeading();
+    }));
 
-    new JoystickButton(m_rightJoystick, OIConstants.kshootPort).whenHeld(new RunCommand(() -> {
+
+    // new JoystickButton(m_rightJoystick, OIConstants.kshootPort).whenHeld(new RunCommand(() -> {
+    new JoystickButton(m_pad, 6).whenHeld(new RunCommand(() -> {
       if (m_copilotDS.getRawButton(OIConstants.kIntakeInPort) && m_shooter.upToSpeed()) {
         m_cargoHandler.setQueue2(.4);
       }
