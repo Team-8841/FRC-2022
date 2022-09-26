@@ -41,7 +41,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   // The drivetain
   public enum DriveState {
-    TANK_DRIVE, MECANUM_DRIVE
+    TANK_DRIVE, MECANUM_DRIVE, MECANUM_DS
   }
 
   private DriveState state;
@@ -71,7 +71,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     // Set inital drive DriveState
-    state = DriveState.TANK_DRIVE;
+    state = DriveState.MECANUM_DRIVE;
 
   }
 
@@ -94,7 +94,7 @@ public class DriveSubsystem extends SubsystemBase {
     updateStatus();
   }
 
-  public void RobotDrive(double left, double right, double mech) {
+  public void RobotDrive(double leftx, double lefty, double rightx, double righty) {
 
     m_drive.feed();
     m_mecDrive.feed();
@@ -106,7 +106,7 @@ public class DriveSubsystem extends SubsystemBase {
         m_leftFrontMotor.setInverted(false);
         m_leftBackMotor.setInverted(false);
 
-        m_drive.tankDrive(left, right);
+        m_drive.tankDrive(lefty, righty);
         break;
 
       case MECANUM_DRIVE:
@@ -116,7 +116,7 @@ public class DriveSubsystem extends SubsystemBase {
         m_leftFrontMotor.setInverted(false);
         m_leftBackMotor.setInverted(false);
 
-        m_mecDrive.driveCartesian(left, mech, 0, m_gyro.getAngle());
+        m_mecDrive.driveCartesian(leftx, lefty, -rightx, m_gyro.getAngle());
         break;
     }
   }

@@ -38,10 +38,9 @@ public final class Constants {
                                 ((kWheelDiameterInches * Math.PI) / (double) kEncoderCPR)
                                                 * kWheelGearRatio;
 
-                public static final double kStrightDriveP = 0.1; // These PID values may not be
-                                                                 // needed
+                public static final double kStrightDriveP = 0.05;
                 public static final double kStrightDriveI = 0;
-                public static final double kStrightDriveD = 0.005;
+                public static final double kStrightDriveD = 0.007;
 
         }
 
@@ -64,15 +63,23 @@ public final class Constants {
                 public static final double kMinOutput = 0;
                 public static final double kAllowedError = 200; // TODO: Tune
 
-                public static final double kShooterSpeed1 = 3500; // 3700 Tarmac
-                public static final double kShooterSpeed2 = 3800; // 4350 Line
-                public static final double kShooterSpeed3 = 4350; // 4500 Safe
-                public static final double kShooterSpeed4 = 4350; // 3900
 
-                public static final double kShooterHoodAngle1 = 0.45;// TODO: Tune Tarmac .55
-                public static final double kShooterHoodAngle2 = 0.39;// TODO: Tune Line .39
-                public static final double kShooterHoodAngle3 = 0.2;// TODO: Tune Safe .3
-                public static final double kShooterHoodAngle4 = 0.2;// TODO: Tune SURE .27
+                // Fender Shot - 80% 3500RPM
+                // Tarmac Shot - 55% 3600RPM
+                // Line Shot - 40% 3700RPM
+                // Safe Shot 25% 3900RPM
+
+                public static final double kShooterSpeed1 = 3500; // Fender 3500
+                public static final double kShooterSpeed2 = 3550; // Tarmac 3600
+                public static final double kShooterSpeed3 = 3700; // Line 3700
+                public static final double kShooterSpeed4 = 3900; // Safe 3900
+                public static final double kShooterSpeed5 = 2500; // haha funni
+
+                public static final double kShooterHoodAngle1 = .77; // Fender .79
+                public static final double kShooterHoodAngle2 = .55; // Tarmac .55
+                public static final double kShooterHoodAngle3 = .41; // Line .41
+                public static final double kShooterHoodAngle4 = .25; // Safe .25
+                public static final double kShooterHoodAngle5 = .30; // haha funni
         }
 
         public static final class TurretConstants {
@@ -99,17 +106,13 @@ public final class Constants {
         }
 
         public static final class ClimberConstants {
-                public static final int kFrontLiftMotorPort = 11;
-                public static final int kRearLiftMotorPort = 12;
-                public static final int kRearPivotMotorPort = 13;
+                public static final int kMasterLiftMotor = 11;
+                public static final int kSlaveLiftMotor = 12;
 
-                public static final int kFrontTopLimitSensorPort = 9;
-                public static final int kFrontBottomLimitSensorPort = 8;
+                public static final int kHangerSolenoidPort = 7;
 
-                public static final int kRearForwardLimitSensorPort = 4;
-                public static final int kRearBackLimitSensorPort = 5;
-                public static final int kRearTopLimitSensorPort = 7;
-                public static final int kRearBottomLimitSensorPort = 6;
+                public static final int kTopLimitSensorPort = 9;
+                public static final int kBottomLimitSensorPort = 8;
         }
 
         public static final class MiscConstants {
@@ -119,9 +122,12 @@ public final class Constants {
 
         public static final class OIConstants {
 
+                public static final String kControlMode = "gamepad"; // Options"gmaepad", "joystcks"
+
                 public static final int kLeftjoystickPort = 0; // DS port 0
                 public static final int kRightjoystickPort = 1; // DS port 1
                 public static final int kCopilotDsPort = 2; // DS port 2
+                public static final int kControllerPort = 3; // Gamepad
 
                 // right joystick inputs
                 public static final int kMechDrivePort = 2; // Thumb button

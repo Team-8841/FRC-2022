@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -13,8 +14,10 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.TurretConstants;
@@ -23,7 +26,6 @@ import frc.robot.commands.Auto4Ball;
 import frc.robot.subsystems.CargoHandler;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.DriveSubsystem.DriveState;
 import frc.robot.subsystems.Lighting;
 import frc.robot.subsystems.Lighting.LightingState;
 import frc.robot.subsystems.Shooter;
@@ -52,9 +54,20 @@ public class RobotContainer {
 
   Command m_autoCommand;
 
-  private final Joystick m_leftJoystick = new Joystick(OIConstants.kLeftjoystickPort);
-  private final Joystick m_rightJoystick = new Joystick(OIConstants.kRightjoystickPort);
+  private static double m_driveStraightSetPoint = 0.0;
+
+
+  // private final Joystick m_leftJoystick = new Joystick(OIConstants.kLeftjoystickPort);
+  // private final Joystick m_rightJoystick = new Joystick(OIConstants.kRightjoystickPort);
+  private final XboxController m_pad = new XboxController(OIConstants.kControllerPort);
   private final Joystick m_copilotDS = new Joystick(OIConstants.kCopilotDsPort);
+
+
+  private final PIDCommand straightDriveCommand = new PIDCommand(
+      new PIDController(DriveConstants.kStrightDriveP, DriveConstants.kStrightDriveI,
+          DriveConstants.kStrightDriveD),
+      m_drive::getHeading, () -> m_driveStraightSetPoint,
+      output -> m_drive.arcadeDrive(-m_pad.getLeftY(), output), m_drive);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -66,8 +79,11 @@ public class RobotContainer {
     m_compressor.enableDigital();
     m_compressor.disable();
     // Default Drive command
-    m_drive.setDefaultCommand(new RunCommand(() -> m_drive.RobotDrive(m_leftJoystick.getY(),
-        -m_rightJoystick.getY(), m_rightJoystick.getX()), m_drive));
+    // m_drive.setDefaultCommand(new RunCommand(() -> m_drive.RobotDrive(m_leftJoystick.getY(),
+    // -m_rightJoystick.getY(), m_rightJoystick.getX()), m_drive));
+
+    m_drive.setDefaultCommand(new RunCommand(() -> m_drive.RobotDrive(m_pad.getLeftX(),
+        m_pad.getLeftY(), m_pad.getRightX(), m_pad.getRightY()), m_drive));
 
     // Default Vision command
     m_vision.setDefaultCommand(new RunCommand(() -> {
@@ -85,11 +101,6 @@ public class RobotContainer {
       // m_shooter.tune(); // TODO: comment this out after tuning shooter
       m_shooter.setSetpoint(getShooterAndHood()[0]);
       m_shooter.setHoodAngle(getShooterAndHood()[1]);
-
-      // Kill compressor if we are shooting
-      if (getShooterAndHood()[0] > 0) {
-        m_compressor.disable();
-      }
 
     }, m_shooter));
 
@@ -134,36 +145,21 @@ public class RobotContainer {
       if (m_copilotDS.getRawButton(OIConstants.kClimbModeSwitchPort)) {
 
         double commandedFrontLiftSpeed = getDesiredFrontLiftSpeed();
-        double commandedRearLiftSpeed = getDesiredRearLiftSpeed();
-        double commandedRearPivotSpeed = getDesiredRearPivotSpeed();
 
-        if (m_climber.getFrontTopSensor() && commandedFrontLiftSpeed > 0) {
-          m_climber.setFrontLiftMotorSpeed(0);
-        } else if (m_climber.getFrontBottomSensor() && commandedFrontLiftSpeed < 0) {
-          m_climber.setFrontLiftMotorSpeed(0);
+        if (m_climber.getTopLimit() && commandedFrontLiftSpeed < 0) {
+          m_climber.setLiftSpeed(0);
+        } else if (m_climber.getBottomLimit() && commandedFrontLiftSpeed > 0) {
+          m_climber.setLiftSpeed(0);
         } else {
-          m_climber.setFrontLiftMotorSpeed(commandedFrontLiftSpeed);
+          m_climber.setLiftSpeed(commandedFrontLiftSpeed);
         }
 
-        if (m_climber.getRearTopSensor() && commandedRearLiftSpeed < 0) {
-          m_climber.setRearLiftMotorSpeed(0);
-        } else if (m_climber.getRearBottomSensor() && commandedRearLiftSpeed > 0) {
-          m_climber.setRearLiftMotorSpeed(0);
+        if (m_copilotDS.getRawButton(12)) {
+          m_climber.setHangSoleniod(true);
         } else {
-          m_climber.setRearLiftMotorSpeed(commandedRearLiftSpeed);
+          m_climber.setHangSoleniod(false);
         }
 
-        if (m_climber.getRearForwardSensor() && commandedRearPivotSpeed < 0) {
-          m_climber.setRearPivotMotorSpeed(0);
-        } else if (m_climber.getRearBackSensor() && commandedRearPivotSpeed > 0) {
-          m_climber.setRearPivotMotorSpeed(0);
-        } else {
-          m_climber.setRearPivotMotorSpeed(commandedRearPivotSpeed);
-        }
-      } else {
-        m_climber.setFrontLiftMotorSpeed(0);
-        m_climber.setRearLiftMotorSpeed(0);
-        m_climber.setRearPivotMotorSpeed(0);
       }
     }, m_climber));
 
@@ -198,8 +194,11 @@ public class RobotContainer {
           m_lighting.setLEDColor(0, 0, 0);
         }
       } else if (m_lighting.getLightingState() == LightingState.Shooting) {
+
         if (m_shooter.upToSpeed() && m_shooter.getHoodAngle() == getShooterAndHood()[1]) {
           m_lighting.setLEDColor(255, 255, 255);
+        } else {
+          m_lighting.setLEDColor(0, 0, 0);
         }
       } else if (m_lighting.getLightingState() == LightingState.ESTOP) {
         m_lighting.setLEDColor(255, 0, 0);
@@ -218,15 +217,16 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Drive state changers
-    new JoystickButton(m_rightJoystick, OIConstants.kMechDrivePort).whenHeld(new RunCommand(() -> {
-      m_drive.driveState(DriveState.MECANUM_DRIVE);
-      SmartDashboard.putString("[DT]Drive State", "MECANUM_DRIVE");
-    }));
-    new JoystickButton(m_rightJoystick, OIConstants.kMechDrivePort)
-        .whenReleased(new RunCommand(() -> {
-          m_drive.driveState(DriveState.TANK_DRIVE);
-          SmartDashboard.putString("[DT]Drive State", "TANK_DRIVE");
-        }));
+    /*
+     * new JoystickButton(m_rightJoystick, OIConstants.kMechDrivePort).whenHeld(new RunCommand(() ->
+     * { m_drive.driveState(DriveState.MECANUM_DRIVE); SmartDashboard.putString("[DT]Drive State",
+     * "MECANUM_DRIVE"); })); new JoystickButton(m_rightJoystick, OIConstants.kMechDrivePort)
+     * .whenReleased(new RunCommand(() -> { m_drive.driveState(DriveState.TANK_DRIVE);
+     * SmartDashboard.putString("[DT]Drive State", "TANK_DRIVE"); }));
+     */
+
+    new JoystickButton(m_pad, 5).whenHeld(straightDriveCommand
+        .beforeStarting(() -> m_driveStraightSetPoint = m_drive.getHeading(), m_drive));
 
     new JoystickButton(m_copilotDS, OIConstants.kCompressorSwitchPort)
         .whenHeld(new RunCommand(() -> {
@@ -236,13 +236,25 @@ public class RobotContainer {
         }));
     new JoystickButton(m_copilotDS, OIConstants.kCompressorSwitchPort)
         .whenReleased(new RunCommand(() -> {
-          m_compressor.enableDigital();
+
+          // Kill compressor if we are shooting
+          if (getShooterAndHood()[0] > 0) {
+            m_compressor.disable();
+          } else {
+            m_compressor.enableDigital();
+          }
           SmartDashboard.putBoolean("Compressor pressure switch",
               m_compressor.getPressureSwitchValue());
         }));
 
+    // Rest gyro maybe fix heading
+    new JoystickButton(m_pad, 7).whenHeld(new RunCommand(() -> {
+      m_drive.resetHeading();
+    }));
 
-    new JoystickButton(m_rightJoystick, OIConstants.kshootPort).whenHeld(new RunCommand(() -> {
+
+    // new JoystickButton(m_rightJoystick, OIConstants.kshootPort).whenHeld(new RunCommand(() -> {
+    new JoystickButton(m_pad, 6).whenHeld(new RunCommand(() -> {
       if (m_copilotDS.getRawButton(OIConstants.kIntakeInPort) && m_shooter.upToSpeed()) {
         m_cargoHandler.setQueue2(.4);
       }
@@ -270,12 +282,12 @@ public class RobotContainer {
   public double[] getShooterAndHood() {
     double angle;
     double speed;
-    double knobValue = m_copilotDS.getRawAxis(5);
+    double knobValue = m_copilotDS.getRawAxis(4); // axis #5 for old knob
     double threshold = 0.010;
 
     // If Shooter Knob is at 1
     if (knobValue < 0.024 - threshold) {
-      angle = 0.35;
+      angle = 0.75;
       speed = 0.0;
     }
     // If Shooter Knob is at 2
@@ -284,28 +296,36 @@ public class RobotContainer {
       speed = ShooterConstants.kShooterSpeed1;
     }
     // If Shooter Knob is at 3
-    else if (knobValue >= 0.024 + threshold && knobValue < 0.055 + threshold) {
+    else if (knobValue >= 0.047 - threshold && knobValue < 0.047 + threshold) {
       angle = ShooterConstants.kShooterHoodAngle2;
       speed = ShooterConstants.kShooterSpeed2;
-    }
-    // If Shooter Knob is at 4
-    else if (knobValue >= 0.055 + threshold) {
+    } else if (knobValue >= 0.071 - threshold && knobValue < 0.071 + threshold) {
       angle = ShooterConstants.kShooterHoodAngle3;
       speed = ShooterConstants.kShooterSpeed3;
+    } else if (knobValue >= 0.094 - threshold && knobValue < 0.094 + threshold) {
+      angle = ShooterConstants.kShooterHoodAngle4;
+      speed = ShooterConstants.kShooterSpeed4;
+    }
+    // If Shooter Knob is at 4
+    else if (knobValue >= 0.094 + threshold) {
+      angle = ShooterConstants.kShooterHoodAngle5;
+      speed = ShooterConstants.kShooterSpeed5;
     } else {
       angle = ShooterConstants.kShooterHoodAngle1;
       speed = 0;
     }
-
+    SmartDashboard.putNumber("RPM: ", speed);
+    SmartDashboard.putNumber("Angle: ", angle);
     return new double[] {speed, angle};
+    // use this to read knob values & not turn on motor- return new double[] {0, .75};
   }
 
   public double getDesiredTurretSpeed() {
     double turretStickX = m_copilotDS.getRawAxis(OIConstants.kMiniJoystick1XPort);
     if (turretStickX < 0.03) {
-      return -0.7;
+      return -0.9;
     } else if (turretStickX > 0.07) {
-      return 0.7;
+      return 0.9;
     } else {
       return 0;
     }
@@ -315,9 +335,9 @@ public class RobotContainer {
     double ClimberStickY = m_copilotDS.getRawAxis(OIConstants.kMiniJoystick3XPort);
     SmartDashboard.putNumber("[Climber] Front Lift Y", ClimberStickY);
     if (ClimberStickY < 0.035) {
-      return 1;
-    } else if (ClimberStickY > 0.075) {
       return -1;
+    } else if (ClimberStickY > 0.075) {
+      return 1;
     } else {
       return 0;
     }
